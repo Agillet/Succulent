@@ -1,23 +1,17 @@
 import React from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { style } from './style';
 import { StackNavigator } from 'react-navigation';
 
-class Post extends React.Component{
+class Post extends TouchableOpacity{
     static navigationOptions = {
         title: 'Welcome',
       };
 render() {
-    // const { navigate } = this.props.navigation;
     return (
-        <View>
-        <Button 
-        title="hello"
-            // style={ style.post }
-        onPress={  this.props.navigation.push('Post', {title: 'WHATEVER'}) }
-        />
-        <Text style= {{color: 'grey'}}> { this.props.data.title } </Text>
-        </View>
+            <View style={ style.post }> 
+                <Text style= {{color: 'grey'}}> {this.props.title} </Text>
+            </View>
     );
   }
 }

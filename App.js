@@ -5,6 +5,7 @@ import { StackNavigator } from 'react-navigation';
 import { Header } from './components/header';
 import PostList from './components/postList';
 import PostView from './components/postView';
+import HomeScreen from './components/homescreen';
 import Post from './components/post';
 
 const RootStack = StackNavigator({
@@ -14,9 +15,9 @@ const RootStack = StackNavigator({
     navigationOptions: {
       title: 'Succulent',
     },
-    Post: {
-      screen: Post
-    }
+  },
+  PostView: {
+    screen: PostView
   },
 })
 

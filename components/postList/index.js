@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, FlatList, View } from 'react-native';
+import {Text, FlatList, View, TouchableOpacity } from 'react-native';
 import  Post from '../post';
 import Client from '../../api';
 import Seperator from '../seperator';
@@ -58,24 +58,30 @@ class PostList extends React.Component {
   }
 
   render() {
+    const { navigate } = this.props.navigation
     if(this.state.loading !== 'true') {
-    return (
-    <View>
-      <FlatList
-        data = { this.state.posts }
-        renderItem = { ({item}) => <Post data = { item.data }/> }
-        keyExtractor = { (item, index) => index }
-        refreshing = { this.state.refreshing }
-        onRefresh = { this.handleRequest }
-        ItemSeparatorComponent={ () => <Seperator /> }
-        onEndReached = { this.handleMore }
-        onEndReachedThreshold = {10}
-      />
-  
-  </View>
-    );
+      return (
+      <View>
+        <FlatList
+          data = { this.state.posts }
+          renderItem = { ({item}) => 
+            <TouchableOpacity 
+              onPress= { () => navigate('PostView', { data: item.data }) } 
+            >
+              <Post title={ item.data.title } />
+            </TouchableOpacity>  
+          }
+          keyExtractor = { (item, index) => index }
+          refreshing = { this.state.refreshing }
+          onRefresh = { this.handleRequest }
+          ItemSeparatorComponent={ () => <Seperator /> }
+          onEndReached = { this.handleMore }
+          onEndReachedThreshold = { 10 }
+        />
+    </View>
+      );
+    }
   }
-}
 }
 
 export default PostList;
