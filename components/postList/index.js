@@ -65,7 +65,15 @@ class PostList extends React.Component {
         <FlatList
           data = { this.state.posts }
           renderItem = { ({item}) => 
+<<<<<<< HEAD
             <Post data={ item.data } onPress= { () => navigate('PostView', { data: item.data }) }/>
+=======
+            <TouchableOpacity 
+              onPress= { () => navigate('PostView', { data: item.data }) } 
+            >
+              <Post data={ item.data } />
+            </TouchableOpacity>  
+>>>>>>> 55c91fd400a70fa3d38bc0033758a675b3508844
           }
           keyExtractor = { (item, index) => index }
           refreshing = { this.state.refreshing }
