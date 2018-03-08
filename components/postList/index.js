@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, FlatList, View, TouchableOpacity } from 'react-native';
 import  Post from '../post';
 import Client from '../../api';
-import Seperator from '../seperator';
+import Separator from '../separator';
 
 class PostList extends React.Component {
 
@@ -68,13 +68,13 @@ class PostList extends React.Component {
             <TouchableOpacity 
               onPress= { () => navigate('PostView', { data: item.data }) } 
             >
-              <Post title={ item.data.title } />
+              <Post data={ item.data } />
             </TouchableOpacity>  
           }
           keyExtractor = { (item, index) => index }
           refreshing = { this.state.refreshing }
           onRefresh = { this.handleRequest }
-          ItemSeparatorComponent={ () => <Seperator /> }
+          ItemSeparatorComponent={ () => <Separator /> }
           onEndReached = { this.handleMore }
           onEndReachedThreshold = { 10 }
         />
