@@ -1,8 +1,10 @@
 import React from 'react';
 import {Text, FlatList, View, TouchableOpacity } from 'react-native';
+import Header from '../header';
 import  Post from '../post';
 import Client from '../../api';
 import Separator from '../separator';
+import { style } from './style';
 
 class PostList extends React.Component {
 
@@ -31,9 +33,14 @@ class PostList extends React.Component {
   fetchMore = () => {
     return Client.fetchNext(this.state.subreddit, this.state.after)
     .then(data => {
-      var concat = this.state.posts.concat(data.children);
+      var feed;
+      if(!data || data.length === 0) {
+        feed = this.state.posts;
+      } else {
+        feed = this.state.posts.concat(data.children);
+      }
       this.setState({
-        posts: concat,
+        posts: feed,
         after: data.after,
         loading: false,
         refreshing: false,
@@ -57,23 +64,42 @@ class PostList extends React.Component {
      });
   }
 
+  handler(e) {
+    e.preventDefault()
+  }
+
+  renderHeader = (subreddit) => {
+    return (
+      <Header title = { subreddit }/>
+    )
+  }
+
   render() {
     const { navigate } = this.props.navigation
     if(this.state.loading !== 'true') {
       return (
       <View>
+
         <FlatList
           data = { this.state.posts }
           renderItem = { ({item}) => 
-            <Post data={ item.data } onPress= { () => navigate('PostView', { data: item.data }) }/>
+
+            <Post 
+              data={ item.data }  
+              onPress= { () => navigate('PostView', { data: item.data }) }
+            />
+          
           }
+          initialNumToRender = { 100 }
           keyExtractor = { (item, index) => index }
           refreshing = { this.state.refreshing }
           onRefresh = { this.handleRequest }
           ItemSeparatorComponent={ () => <Separator /> }
           onEndReached = { this.handleMore }
-          onEndReachedThreshold = { 10 }
+          onEndReachedThreshold = { 75 }
+          ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
         />
+
     </View>
       );
     }

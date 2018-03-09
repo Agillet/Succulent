@@ -17,7 +17,7 @@ class RedditClient{
 
   fetchHot(subreddit) {   
     return (
-        fetch(this.baseUrl + subreddit + this.jsonPostfix + '?limit=25&after=')
+        fetch(this.baseUrl + subreddit + this.jsonPostfix + '?limit=50&after=')
         .then((response) => response.json())
         .then((responseJson) => {
           return responseJson.data;
@@ -32,7 +32,7 @@ class RedditClient{
 
   fetchNext(subreddit, after) {
     return (
-      fetch(this.baseUrl + subreddit + this.jsonPostfix +'?limit=25&&after=' + after)
+      fetch(this.baseUrl + subreddit + this.jsonPostfix +'?limit=50&&after=' + after)
         .then((response) => response.json())
         .then((responseJson) => {
           return responseJson.data;

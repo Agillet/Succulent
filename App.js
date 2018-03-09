@@ -2,24 +2,26 @@
 import React from 'react';
 import { FlatList, ActivityIndicator, Text, View  } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import { Header } from './components/header';
 import PostList from './components/postList';
 import PostView from './components/postView';
-import HomeScreen from './components/homescreen';
+import Header from './components/header';
 import Post from './components/post';
 
 const RootStack = StackNavigator({
   Home: {
     title: 'Hello',
     screen: PostList,
+    headerMode: 'none',
+    header: null,
     navigationOptions: {
-      title: 'Succulent',
+      headerVisible: false,
     },
   },
   PostView: {
     screen: PostView
   },
-})
+
+}, {headerMode: 'none'} );
 
 export default class App extends React.Component {
   constructor(props) {

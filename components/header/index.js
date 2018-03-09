@@ -1,8 +1,17 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View, TextInput } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import { style } from './style';
 
-const Header = () => {
-  <Text>Hello</Text>
+class Header extends React.Component{
+
+render() {
+    return  (
+        <View style = { style.header } >
+            <Text style = {style.title}> { this.props.title } </Text>
+        </View>
+    );
+  }
 }
 
 export default Header;

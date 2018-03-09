@@ -4,15 +4,13 @@ export const style = StyleSheet.create({
     post: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: 'black',
-      minHeight: 150
+      backgroundColor: '#212223',
+      minHeight: 150,
     },
 
     textView: {
-<<<<<<< HEAD
-      flexDirection: 'column',
-      width: "66%",
-      paddingLeft: 10,
+      width: '66%',
+      marginLeft: 15,
     },
 
     text: {
@@ -23,16 +21,12 @@ export const style = StyleSheet.create({
     thumbnail: {
       width: 100,
       height: 100,
-      marginLeft: 10
+      marginLeft: 10,
+      // paddingRight: 15,
+      justifyContent: 'center',
     },
 
-=======
-      justifyContent: 'center',
-      alignItems: 'center',
+    title: {
       color: 'white',
-      fontSize: 15,
-      width: "66%",
-      paddingLeft: 10,
-    }
->>>>>>> 55c91fd400a70fa3d38bc0033758a675b3508844
+    },
   });
