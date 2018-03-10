@@ -34,7 +34,7 @@ class PostList extends React.Component {
     return Client.fetchNext(this.state.subreddit, this.state.after)
     .then(data => {
       var feed;
-      if(!data || data.length === 0) {
+      if(!data || data.length === 0 || !this.state.posts) {
         feed = this.state.posts;
       } else {
         feed = this.state.posts.concat(data.children);
@@ -64,19 +64,20 @@ class PostList extends React.Component {
      });
   }
 
-  handler(e) {
-    e.preventDefault()
-  }
+  handleSubmit = (newSubreddit) => {
+    this.setState({subreddit: newSubreddit});
+    this.handleRequest();
+}
 
   renderHeader = (subreddit) => {
     return (
-      <Header title = { subreddit }/>
+      <Header title = { subreddit } handle = { this.handleSubmit } />
     )
   }
 
   render() {
     const { navigate } = this.props.navigation
-    if(this.state.loading !== 'true') {
+    if(this.state.loading !== 'true' ) {
       return (
       <View>
 
@@ -95,8 +96,8 @@ class PostList extends React.Component {
           refreshing = { this.state.refreshing }
           onRefresh = { this.handleRequest }
           ItemSeparatorComponent={ () => <Separator /> }
+          onEndReachedThreshold = { 1 }
           onEndReached = { this.handleMore }
-          onEndReachedThreshold = { 75 }
           ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
         />
 

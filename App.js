@@ -6,6 +6,7 @@ import PostList from './components/postList';
 import PostView from './components/postView';
 import Header from './components/header';
 import Post from './components/post';
+import Login from './components/login';
 
 const RootStack = StackNavigator({
   Home: {
@@ -26,10 +27,11 @@ const RootStack = StackNavigator({
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { currentSubreddit: 'all' };
+    this.state = { currentSubreddit: 'blackpeopletwitter' };
   }
 
   render(){
-    return <RootStack screenProps={this.state.currentSubreddit} />
+    return <Login />
+    // return <RootStack screenProps={this.state.currentSubreddit} />
   }
 }

@@ -43,6 +43,15 @@ class RedditClient{
       );
   }
 
+  // authenticate(username, password) {
+  //   return (
+  //     fetch('https://www.reddit.com/api/v1/access_token', {
+  //       method: 'POST',
+        
+  //     })
+  //   )
+  // }
+
   render(){
     return ;
   }
