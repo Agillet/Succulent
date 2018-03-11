@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TextInput } from 'react-native';
+import { Text, View, TextInput, Button } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { SearchBar } from 'react-native-elements'
 import { style } from './style';
@@ -26,6 +26,10 @@ render() {
                     placeholder='Type Here...' 
                 />
                 </View>
+                <Button 
+                    title= 'login'
+                    onPress= { this.props.login } 
+                />
         </View>
     );
   }

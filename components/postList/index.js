@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, FlatList, View, TouchableOpacity } from 'react-native';
+import {Text, FlatList, View, TouchableOpacity, Button } from 'react-native';
 import Header from '../header';
 import  Post from '../post';
 import Client from '../../api';
@@ -11,15 +11,15 @@ class PostList extends React.Component {
   constructor(props) {
     super(props);
     this.state = ({
-      loading: true,
+      loading: false,
       refreshing: false,
-      subreddit: this.props.screenProps,
+      subreddit: this.props.navigation.state.params.subreddit,
     })
     this.fetchData();
   }
 
   fetchData =  () => {
-    return Client.fetchHot(this.state.subreddit)
+    return Client.fetchHot('all')
       .then(data => {
         this.setState(state => ({
           posts: data.children,
@@ -69,13 +69,19 @@ class PostList extends React.Component {
     this.handleRequest();
 }
 
+  goToLogin = () => {
+    this.props.navigation.navigate('Login');
+  }
+
+
   renderHeader = (subreddit) => {
     return (
-      <Header title = { subreddit } handle = { this.handleSubmit } />
+      <Header title = { subreddit } handle = { this.handleSubmit } login = { this.goToLogin } />
     )
   }
 
   render() {
+    console.log(this.state);
     const { navigate } = this.props.navigation
     if(this.state.loading !== 'true' ) {
       return (
@@ -96,8 +102,8 @@ class PostList extends React.Component {
           refreshing = { this.state.refreshing }
           onRefresh = { this.handleRequest }
           ItemSeparatorComponent={ () => <Separator /> }
-          onEndReachedThreshold = { 1 }
-          onEndReached = { this.handleMore }
+          // onEndReachedThreshold = { 1 }
+          // onEndReached = { this.handleMore }
           ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
         />
 
