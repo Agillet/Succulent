@@ -22,29 +22,70 @@ class RedditClient{
     let value = storage.save({
       key: 'token',
       data: { token }
-    }).then( ( value ) => { return value; })
+    }).then( ( value ) => { return value; });
+    this.SetLoggedInToTrue();
   }
 
+  SetLoggedInToTrue = () => {
+     storage.save({
+      key: 'loggedIn',
+      data: true
+    });
+  }
+  
   async getTokenFromStorage() {
+    console.log('getting token...')
     return( storage.load({ key: 'token' })
         .then((ret) => {
           if(ret.token === 'undefined') {
+            console.log('..from reddit');
             this.fetchToken('0f_WVPMtSN9uLg')
             .then( (responseJson) => this.storeToken(responseJson) )
           } else {
+            console.log('..from storage');
             return ret.token.access_token;
           }
       })
     )
   }
 
+  getToken() {
+    return storage.load({key : 'token'});
+  }
+
   async fetchHot(subreddit) {  
-    const token = await this.getTokenFromStorage();
+    console.log('fetching hot...');
+	const token = await this.getToken();
+	console.log(' with token :');
+	console.log( token);
+    const url = this.baseUrl + subreddit + this.jsonPostfix + '?limit=20' ;
     return (
-      fetch(this.baseUrl + subreddit + this.jsonPostfix + '?limit=100&after=', {
+      fetch( url, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer  ${token}` ,
+          'Authorization': `Bearer  ${token.token.access_token}` ,
+          'Content-Type': 'application/json',
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        return responseJson.data;
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+    ); 
+  }
+  
+  
+  
+  async fetchNext(subreddit, after) {
+    const token = await this.getToken();
+    return (
+      fetch(this.baseUrl + subreddit + this.jsonPostfix + '?limit=20&after=' + after, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer  ${token.token.access_token}` ,
           'Content-Type': 'application/json',
         }
       })
@@ -58,32 +99,10 @@ class RedditClient{
     ); 
   }
 
-
-
-  fetchNext(subreddit, after) {
-    return (
-      this.getTokenFromStorage().then( (token) => { 
-        fetch(this.baseUrl + subreddit + this.jsonPostfix +'?limit=100&&after=' + after, {
-          method: 'POST',
-          header: {
-            'Authorization': `Bearer  ${token}` ,
-            'Content-Type': 'application/json',
-          }
-        })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            return responseJson.data;
-          })
-          .catch((error) => {
-            console.error(error);
-          })
-        })
-      );
-  }
-
   fetchToken(code) {
+	  console.log('fetching token...');
       return ( 
-        fetch(
+			fetch(
         'https://www.reddit.com/api/v1/access_token', {
           method: 'POST',
           headers: {
@@ -100,10 +119,6 @@ class RedditClient{
       })
 
     )
-  }
-
-  render(){
-    return ;
   }
 }
 

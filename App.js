@@ -11,7 +11,7 @@ import SplashScreen from './components/splashscreen';
 
 const RootStack = StackNavigator({
   SplashScreen: {
-    screen: SplashScreen
+    screen: SplashScreen,
   },
   Home: {
     title: 'Hello',
@@ -38,6 +38,7 @@ export default class App extends React.Component {
   }
 
   render(){
+    // storage.remove({key: 'token'});
     return <RootStack />
   }
 }

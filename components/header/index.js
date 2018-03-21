@@ -26,10 +26,6 @@ render() {
                     placeholder='Type Here...' 
                 />
                 </View>
-                <Button 
-                    title= 'login'
-                    onPress= { this.props.login } 
-                />
         </View>
     );
   }

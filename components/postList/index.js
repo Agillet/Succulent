@@ -11,14 +11,17 @@ class PostList extends React.Component {
   constructor(props) {
     super(props);
     this.state = ({
-      loading: false,
+      loading: true,
       refreshing: false,
       subreddit: this.props.navigation.state.params.subreddit,
     })
+  }
+
+  componentDidMount() {
     this.fetchData();
   }
 
-  fetchData =  () => {
+  fetchData = () => {
     return Client.fetchHot('all')
       .then(data => {
         this.setState(state => ({
@@ -31,6 +34,7 @@ class PostList extends React.Component {
   }
 
   fetchMore = () => {
+    console.log('end reached...');
     return Client.fetchNext(this.state.subreddit, this.state.after)
     .then(data => {
       var feed;
@@ -59,37 +63,25 @@ class PostList extends React.Component {
   handleMore = () => {
     this.setState(
       { 
-        loading: true
+        // loading: true
       }, () =>  {
         this.fetchMore();
       }
     );
   }
 
-  handleSubmit = (newSubreddit) => {
-    this.setState({
-      subreddit: newSubreddit
-    });
-    this.handleRequest();
-}
-
-  goToLogin = () => {
-    this.props.navigation.navigate('Login');
-  }
-
-
   renderHeader = (subreddit) => {
     return (
-      <Header title = { subreddit } handle = { this.handleSubmit } login = { this.goToLogin } />
+      <Header title = { subreddit } />
     )
   }
 
   render() {
     const { navigate } = this.props.navigation
-    if(this.state.loading !== 'true' ) {
+    if(this.state.loading === false ) {
       return (
       <View>
-        <FlatList
+         <FlatList
           data = { this.state.posts }
           renderItem = {
             ({item}) => 
@@ -98,18 +90,22 @@ class PostList extends React.Component {
                 onPress= { () => navigate('PostView', { data: item.data }) }
               />
           }
-          initialNumToRender = { 50 }
           keyExtractor = { (item, index) => index }
           refreshing = { this.state.refreshing }
           onRefresh = { this.handleRequest }
           ItemSeparatorComponent={ () => <Separator /> }
-          onEndReached = { () => this.handleMore }
           onEndReachedThreshold = { 1 }
+          onEndReached = { () => this.handleMore() }
           ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
-        />
+          stickyHeaderIndices={[0]} 
+        /> 
 
     </View>
       );
+    } else {
+      return (
+        <View><Text>Loading</Text></View>
+      )
     }
   }
 }
