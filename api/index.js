@@ -18,15 +18,21 @@ class RedditClient{
     };
   }
 
+  storeToken(token){
+    let value = storage.save({
+      key: 'token',
+      data: { token }
+    }).then( ( value ) => { return value; })
+  }
+
   async getTokenFromStorage() {
     return( storage.load({ key: 'token' })
         .then((ret) => {
           if(ret.token === 'undefined') {
-            this.fetchToken()
-            .then((token) => { console.log('fetched from api' + token)});
+            this.fetchToken('0f_WVPMtSN9uLg')
+            .then( (responseJson) => this.storeToken(responseJson) )
           } else {
-            console.log('fetched from storage :' + ret.token)
-            return ret.token;
+            return ret.token.access_token;
           }
       })
     )
@@ -35,8 +41,7 @@ class RedditClient{
   async fetchHot(subreddit) {  
     const token = await this.getTokenFromStorage();
     return (
-      fetch(this.baseUrl + subreddit + this.jsonPostfix + '?limit=50&after=', {
-        // fetch("https://www.oauth.reddit.com/api/v1/me.json", {
+      fetch(this.baseUrl + subreddit + this.jsonPostfix + '?limit=100&after=', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer  ${token}` ,
@@ -58,7 +63,7 @@ class RedditClient{
   fetchNext(subreddit, after) {
     return (
       this.getTokenFromStorage().then( (token) => { 
-        fetch(this.baseUrl + subreddit + this.jsonPostfix +'?limit=50&&after=' + after, {
+        fetch(this.baseUrl + subreddit + this.jsonPostfix +'?limit=100&&after=' + after, {
           method: 'POST',
           header: {
             'Authorization': `Bearer  ${token}` ,
@@ -77,7 +82,6 @@ class RedditClient{
   }
 
   fetchToken(code) {
-    console.log('fetchingToken');
       return ( 
         fetch(
         'https://www.reddit.com/api/v1/access_token', {
@@ -92,7 +96,6 @@ class RedditClient{
       )
       .then(( response ) => response.json() )
       .then((responseJson) => {
-        console.log(('got :' + responseJson.access_token))
         return responseJson;
       })
 

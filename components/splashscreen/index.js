@@ -5,7 +5,7 @@ class SplashScreen extends React.Component {
 
     componentDidMount () {
         storage.load({ key: 'token'}).then( ret => {
-            if(ret.length > 0) {
+            if(ret) {
                 this.props.navigation.navigate('Home', { subreddit: 'all'});
             } else {
                 this.props.navigation.navigate('Login');
@@ -22,6 +22,7 @@ class SplashScreen extends React.Component {
                     break;
             }
         });
+        this.props.navigation.navigate('Login');
     }
 
   render(){

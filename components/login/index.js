@@ -12,19 +12,12 @@ class Login extends React.Component {
     });
   }
 
-  storeToken(token){
-      let value = storage.save({
-        key: 'token',
-        data: { token }
-      }).then( () => {this.setState({logged_in: true})})
-  }
-
   onNavigationStateChange = (navState) => {
     if (navState.url.indexOf('https://www.google.fr') === 0) {
       if( this.state.logged_in === false ) {
       const regex = /^(https:\/\/www.google.fr\/\?state=toto&code=)(.*)?$/ ;
       return( Client.fetchToken(navState.url.match(regex)[2]))
-        .then( (responseJson) => this.storeToken(responseJson.access_token) )
+        .then( (responseJson) => Client.storeToken(responseJson) )
         .catch( (error) => {
           console.log(error)
         })

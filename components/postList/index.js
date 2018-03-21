@@ -51,21 +51,25 @@ class PostList extends React.Component {
   handleRequest = () => {
     this.setState({ 
       refreshing: true
-     }, () =>  {
-       this.fetchData();
-     });
+    }, () =>  {
+    });
+    this.fetchData();
   }
 
   handleMore = () => {
-    this.setState({ 
-      loading: true
-     }, () =>  {
-       this.fetchMore();
-     });
+    this.setState(
+      { 
+        loading: true
+      }, () =>  {
+        this.fetchMore();
+      }
+    );
   }
 
   handleSubmit = (newSubreddit) => {
-    this.setState({subreddit: newSubreddit});
+    this.setState({
+      subreddit: newSubreddit
+    });
     this.handleRequest();
 }
 
@@ -81,29 +85,26 @@ class PostList extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     const { navigate } = this.props.navigation
     if(this.state.loading !== 'true' ) {
       return (
       <View>
-
         <FlatList
           data = { this.state.posts }
-          renderItem = { ({item}) => 
-
-            <Post 
-              data={ item.data }  
-              onPress= { () => navigate('PostView', { data: item.data }) }
-            />
-          
+          renderItem = {
+            ({item}) => 
+              <Post 
+                data={ item.data }  
+                onPress= { () => navigate('PostView', { data: item.data }) }
+              />
           }
-          initialNumToRender = { 100 }
+          initialNumToRender = { 50 }
           keyExtractor = { (item, index) => index }
           refreshing = { this.state.refreshing }
           onRefresh = { this.handleRequest }
           ItemSeparatorComponent={ () => <Separator /> }
-          // onEndReachedThreshold = { 1 }
-          // onEndReached = { this.handleMore }
+          onEndReached = { () => this.handleMore }
+          onEndReachedThreshold = { 1 }
           ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
         />
 
