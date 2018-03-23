@@ -10,11 +10,12 @@ class PostList extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log( this.props.navigation.state.params.subreddit);
     this.state = ({
       loading: true,
       refreshing: false,
       subreddit: this.props.navigation.state.params.subreddit,
-    })
+    });
   }
 
   componentDidMount() {
@@ -22,7 +23,8 @@ class PostList extends React.Component {
   }
 
   fetchData = () => {
-    return Client.fetchHot('all')
+    console.log('state :' + this.state.subreddit);
+    return Client.fetchHot(this.state.subreddit)
       .then(data => {
         this.setState(state => ({
           posts: data.children,
@@ -54,6 +56,7 @@ class PostList extends React.Component {
 
   handleRequest = () => {
     this.setState({ 
+      loading:true,
       refreshing: true
     }, () =>  {
     });
@@ -61,8 +64,7 @@ class PostList extends React.Component {
   }
 
   handleMore = () => {
-    this.setState(
-      { 
+    this.setState({ 
         // loading: true
       }, () =>  {
         this.fetchMore();
@@ -72,8 +74,16 @@ class PostList extends React.Component {
 
   renderHeader = (subreddit) => {
     return (
-      <Header title = { subreddit } />
+      <Header title = { subreddit } handle = { this.handleSubmit } />
     )
+  }
+
+  handleSubmit = (newSubreddit) => {
+    this.setState({
+      subreddit: newSubreddit
+    }, () => {
+    this.props.navigation.navigate('Home', { subreddit: newSubreddit });
+    });
   }
 
   render() {
@@ -87,7 +97,7 @@ class PostList extends React.Component {
             ({item}) => 
               <Post 
                 data={ item.data }  
-                onPress= { () => navigate('PostView', { data: item.data }) }
+                onPress= { () => this.navigate('PostView', { data: item.data }) }
               />
           }
           keyExtractor = { (item, index) => index }

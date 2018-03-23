@@ -19,9 +19,12 @@ class RedditClient{
   }
 
   storeToken(token){
+	  console.log('storing');
+	  console.log(token);
     let value = storage.save({
       key: 'token',
-      data: { token }
+	  data: { token },
+	  expires: 1000 * 3600
     }).then( ( value ) => { return value; });
     this.SetLoggedInToTrue();
   }
@@ -50,14 +53,16 @@ class RedditClient{
   }
 
   getToken() {
-    return storage.load({key : 'token'});
+    return storage.load({
+		key : 'token',
+		autoSync: false,
+		syncInBackground: false,
+	});
   }
 
   async fetchHot(subreddit) {  
     console.log('fetching hot...');
 	const token = await this.getToken();
-	console.log(' with token :');
-	console.log( token);
     const url = this.baseUrl + subreddit + this.jsonPostfix + '?limit=20' ;
     return (
       fetch( url, {
@@ -99,6 +104,29 @@ class RedditClient{
     ); 
   }
 
+  async refreshToken() {
+		console.log('refreshing token...');
+		const token = await this.getToken();
+		return (
+			fetch(
+				'https://www.reddit.com/api/v1/access_token',
+				{
+					method: 'POST',
+					header: {
+					    'Accept': 'application/json',
+            			'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization' : 'Basic ' + binaryToBase64(utf8.encode('0f_WVPMtSN9uLg' + ":" + '')),	
+					},
+					body: 'grant_type=refresh_token&refresh_token=' + token.token.refresh_token,
+				}
+			)
+			.then(( response ) => response.json() )
+			.then((responseJson) => {
+			  return responseJson;
+			})
+		)
+ 	}
+
   fetchToken(code) {
 	  console.log('fetching token...');
       return ( 
@@ -117,7 +145,6 @@ class RedditClient{
       .then((responseJson) => {
         return responseJson;
       })
-
     )
   }
 }

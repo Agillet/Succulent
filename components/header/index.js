@@ -20,8 +20,6 @@ render() {
             <View   style = { style.searchBar }>
                 <SearchBar
                     lightTheme
-                    // onChangeText={someMethod}
-                    // onClearText={someMethod}
                     onSubmitEditing = {(event) => this.onSubmit(event.nativeEvent.text) }
                     placeholder='Type Here...' 
                 />
