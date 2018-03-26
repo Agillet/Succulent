@@ -22,7 +22,7 @@ export const style = StyleSheet.create({
       width: 100,
       height: 100,
       marginLeft: 10,
-      // paddingRight: 15,
+      paddingRight: 15,
       justifyContent: 'center',
     },
 

@@ -1,10 +1,12 @@
 import React from 'react';
-import {Text, FlatList, View, TouchableOpacity, Button } from 'react-native';
+import {Text, FlatList, View, TouchableOpacity, Button, Image } from 'react-native';
 import Header from '../header';
 import  Post from '../post';
 import Client from '../../api';
 import Separator from '../separator';
 import { style } from './style';
+import stylePost from '../post/style';
+
 
 class PostList extends React.Component {
 
@@ -22,18 +24,22 @@ class PostList extends React.Component {
     this.fetchData();
   }
 
-  fetchData = () => {
-    console.log('state :' + this.state.subreddit);
-    return Client.fetchHot(this.state.subreddit)
-      .then(data => {
-        this.setState(state => ({
-          posts: data.children,
-          after: data.after,
-          loading: false,
-          refreshing: false,
-        }));
-      })
-  }
+	fetchData = () => {
+		console.log('state :' + this.state.subreddit);
+    	return Client.fetchHot(this.state.subreddit)
+			.then(data => {
+		  		if(data.error) {
+					setTimeout(() => { this.fetchData() }, 3000);
+				} else {
+        			this.setState(state => ({
+          			posts: data.children,
+					after: data.after,
+          			loading: false,
+          			refreshing: false,
+				}));
+			}
+      	});
+  	}
 
   fetchMore = () => {
     console.log('end reached...');
@@ -86,32 +92,46 @@ class PostList extends React.Component {
     });
   }
 
+  navigateToPost = (data) => {
+	  this.props.navigation.navigate('ImageView', { data: data })
+  }
+
   render() {
     const { navigate } = this.props.navigation
     if(this.state.loading === false ) {
-      return (
-      <View>
-         <FlatList
-          data = { this.state.posts }
-          renderItem = {
-            ({item}) => 
-              <Post 
-                data={ item.data }  
-                onPress= { () => this.navigate('PostView', { data: item.data }) }
-              />
-          }
-          keyExtractor = { (item, index) => index }
-          refreshing = { this.state.refreshing }
-          onRefresh = { this.handleRequest }
-          ItemSeparatorComponent={ () => <Separator /> }
-          onEndReachedThreshold = { 1 }
-          onEndReached = { () => this.handleMore() }
-          ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
-          stickyHeaderIndices={[0]} 
-        /> 
+      	return (
+      		<View>
+        		<FlatList
+          			data = { this.state.posts }
+		  			renderItem = 
+						{({item}) => 
+							<View style = { style.post } >
+								<Post 
+									data={ item.data }  
+									// onPress= { () => this.navigate('PostView', { data: item.data }) }
+								/>
+								<TouchableOpacity
+									onPress = { () => this.navigateToPost(item.data ) }
+								>
+									<Image 
+										source = {{ uri: item.data.thumbnail }}
+										style={ style.thumbnail }
+									/>
+								</TouchableOpacity>
+							</View>
+						}
+					keyExtractor = { (item, index) => index }
+					refreshing = { this.state.refreshing }
+					onRefresh = { this.handleRequest }
+					ItemSeparatorComponent={ () => <Separator /> }
+					onEndReachedThreshold = { 1 }
+					onEndReached = { () => this.handleMore() }
+					ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
+					stickyHeaderIndices={[0]} 
+        		/> 
 
-    </View>
-      );
+    		</View>
+      	);
     } else {
       return (
         <View><Text>Loading</Text></View>
