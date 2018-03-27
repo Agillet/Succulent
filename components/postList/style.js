@@ -5,10 +5,11 @@ export const style = StyleSheet.create({
         backgroundColor: '#212223'
     },
     thumbnail: {
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
         marginLeft: 10,
-        paddingRight: 15,
+        marginRight: 100,
+        // paddingRight: 150,
         justifyContent: 'center',
       },
       post: {
@@ -16,6 +17,7 @@ export const style = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#212223',
         minHeight: 150,
+        paddingRight: 50,
       },
   
       textView: {

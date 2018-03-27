@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, Dimensions, WebView } from 'react-native';
+import { Text, View, Image, Dimensions, WebView, ScrollView } from 'react-native';
 import { Video } from 'expo';
 import Transformer from '../Transformer/Transformer';
 
@@ -15,46 +15,54 @@ class Target extends React.Component {
 
     componentDidMount() {
         const data = this.props.navigation.state.params.data;
+
+        if(data.is_self) {
+            this.setState({type: 'self', loading: false});
+            return;
+        }
         const width = data.preview.images.slice(-1)[0].source.width;
         const height = data.preview.images.slice(-1)[0].source.height;
         const regex = /(.*)\.(gif|jpg|jpeg|tiff|png|gifv)$/ ;
         let url = data.url;
         let type = '';
-        console.log(data.domain);
+        // console.log(data);
         let params = {};
-            switch(data.domain) {
-                case 'i.imgur.com': 
-                    params = Transformer.i_imgur(url);
-                    url = params.url;
-                    type = params.type;    
-                    break;
-                case 'imgur.com':
-                    params = Transformer.imgur(url);
-                    url = params.url;
-                    type = params.type;    
-                    break;
-                case 'v.redd.it' :
-                    params = Transformer.v_reddit(url);
-                    url = params.url;
-                    type = params.type; 
-                    break;
-                case 'i.redd.it':
-                    params = Transformer.i_reddit(url);
-                    url = params.url;
-                    type = params.type;                     
-                    break;
-                case 'gfycat.com' : 
-                    params = Transformer.gfycat(url) ;
-                    url = params.url;
-                    type = params.type;
-                    break;    
-                default :
-                    type = 'link';
-                    break;
-            }
+
+        switch(data.domain) {
+            case 'i.imgur.com': 
+                params = Transformer.i_imgur(url);
+                url = params.url;
+                type = params.type;    
+                break;
+            case 'imgur.com':
+                params = Transformer.imgur(url);
+                url = params.url;
+                type = params.type;    
+                break;
+            case 'v.redd.it' :
+                params = Transformer.v_reddit(url);
+                url = params.url;
+                type = params.type; 
+                break;
+            case 'i.redd.it':
+                params = Transformer.i_reddit(url);
+                url = params.url;
+                type = params.type;                     
+                break;
+            case 'gfycat.com' : 
+                params = Transformer.gfycat(url) ;
+                url = params.url;
+                type = params.type;
+                break;
+            default :
+                type = 'link';
+                break;
+        }
         const screenWidth = Dimensions.get('window').width;
         const scaleFactor = width / screenWidth
-        const imageHeight = height / scaleFactor
+        const imageHeight = height / scaleFactor;
+        console.log('image ' +imageHeight)
+        console.log('screen ' +  Dimensions.get('window').height)
         this.setState({type: type, imgWidth: screenWidth, imgHeight: imageHeight, loading: false, url: url})
         // }
     }
@@ -64,10 +72,12 @@ class Target extends React.Component {
         if(this.state.loading === false) {
             if(this.state.type === 'image') {
                 return (
+                    <ScrollView>
                     <Image 
                         source =  {{ uri: this.state.url }}
                         style = {{ width: this.state.imgWidth, height: this.state.imgHeight }}
                     />
+                    </ScrollView>
                 )
             } else  if (this.state.type === 'link'){
                 return (
@@ -75,7 +85,7 @@ class Target extends React.Component {
                         source = {{ uri: this.state.url }}
                     />
                 );
-            }   else if (this.state.type === 'gifv') {
+            } else if (this.state.type === 'gifv') {
                 return (
                     <Video
                         source={{ uri: this.state.url }}
@@ -91,6 +101,12 @@ class Target extends React.Component {
                     />
 
 
+                )
+            } else if (this.state.type === 'self') {
+                return (
+                    <View>
+                        <Text>Not supported yet</Text>
+                    </View>
                 )
             }
 
