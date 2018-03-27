@@ -33,6 +33,19 @@ class RedditClient{
     });
   }
 
+  getRefreshToken() {
+    return storage.load({
+      key : 'refreshToken',
+    });
+  }
+  setRefreshToken(refreshToken) {
+
+    return storage.save({
+      key: 'refreshToken',
+      data: { refreshToken }
+    });
+  }
+
   async fetchHot(subreddit) {  
     console.log('fetching hot...');
   const token = await this.getToken();
@@ -51,7 +64,7 @@ class RedditClient{
       .then((responseJson) => {
         if(responseJson.error){
           console.warn(('token expired'));
-          this.refreshToken(token.token.refresh_token);
+          this.refreshToken();
           return responseJson;
         } else {
             return responseJson.data;
@@ -85,9 +98,9 @@ class RedditClient{
     ); 
   }
 
-    refreshToken(refresh_token) {
+    async refreshToken() {
     console.log('refreshing token...');
-    console.log('with refresh token : ' + refresh_token);
+    const refresh_token = await this.getRefreshToken();
 		return (
         fetch(
           'https://www.reddit.com/api/v1/access_token',
@@ -98,12 +111,18 @@ class RedditClient{
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Authorization' : 'Basic ' + binaryToBase64(utf8.encode('0f_WVPMtSN9uLg' + ":" + '')),	
             },
-            body: 'grant_type=refresh_token&refresh_token=' + refresh_token,
+            body: 'grant_type=refresh_token&refresh_token=' + refresh_token.refreshToken,
           }
         )
         .then(( response ) => response.json() )
         .then((responseJson) => {
-          this.storeToken(responseJson)
+          if(responseJson.error) {
+            console.log('error refreshing token with refresh token : ');
+            console.log(refresh_token.refreshToken);
+            console.log(responseJson);
+            } else {
+            this.storeToken(responseJson)
+          }
         })
     )
  	}

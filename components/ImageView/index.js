@@ -15,6 +15,8 @@ class PostView extends React.Component {
         const data = this.props.navigation.state.params.data;
         const width = data.preview.images.slice(-1)[0].source.width;
         const height = data.preview.images.slice(-1)[0].source.height;
+        console.log(this.state.height);
+        console.log(this.state.width);
         const regex = /(.*)\.(gif|jpg|jpeg|tiff|png|gifv)$/ ;
         let url = data.url;
         let type = '';
@@ -24,15 +26,22 @@ class PostView extends React.Component {
             switch(data.domain) {
                 case 'i.imgur.com': 
                     if(url.match(regex)[2] === 'gifv') {
+                        url = url.substring(0, url.length - 4);
+                        url += 'mp4';
                         type = 'gifv';
-                        // url = url.substring(0, url.length - 1);
+                    } else{
+                        type = 'image';
                     }
                     break;
                 case 'imgur.com':
                     if (!url.match(regex)) {
-                            url += '.jpg';
-                            type = 'image';
-                    }
+                        url += '.jpg';
+                        type = 'image';
+                    } else if(url.match(regex)[2] === 'gifv') {
+                        url = url.substring(0, url.length - 4);
+                        url += 'mp4';
+                        type = 'gifv';
+                    }      
                     break;
                 case 'v.redd.it' :
                 console.log(data);
@@ -44,6 +53,13 @@ class PostView extends React.Component {
                         url += '.jpg';
                     }
                     type = 'image';
+                    break;
+                case 'gfycat.com' : 
+                    type = 'gifv';
+                    let pattern = /(https:\/\/)(gfycat.com\/.*)/ ;
+                    urlArray = url.match(pattern);
+                    url = urlArray[1] + 'giant.' + urlArray[2] + '.mp4' ;
+                    console.log(urlArray);
                     break;
                 default :
                     type = 'link';
@@ -77,17 +93,19 @@ class PostView extends React.Component {
             }   else if (this.state.type === 'gifv') {
                 return (
                     <Video
-                        source = {{uri: this.state.uri }}
-                        poster="https://baconmockup.com/300/200/"
-                        ref={(ref) => {
-                            this.player = ref
-                          }}    
-                          rate={1.0}
-                          volume={1.0}
-                          muted={false}
-                          resizeMode={"cover"}
-                          repeat
+                        source={{ uri: this.state.url }}
+                        rate={1.0}
+                        volume={1.0}
+                        isMuted={false}
+                        resizeMode="cover"
+                        shouldPlay
+                        isLooping
+                        style={{ width: this.state.imgWidth, height: this.state.imgHeight }}
+                        onLoadStart={() => { console.log('loading')}}
+                        onLoadStart={() => { console.log('loading end')}}
                     />
+
+
                 )
             }
 

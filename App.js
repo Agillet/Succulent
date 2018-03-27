@@ -3,7 +3,6 @@ import React from 'react';
 import { FlatList, ActivityIndicator, Text, View, AsyncStorage  } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import PostList from './components/postList';
-import PostView from './components/postView';
 import Header from './components/header';
 import Post from './components/post';
 import Login from './components/login';

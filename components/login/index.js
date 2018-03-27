@@ -21,6 +21,7 @@ class Login extends React.Component {
 				.then( (responseJson) => {
 					if(responseJson.access_token){
 						 Client.storeToken(responseJson);
+						 Client.setRefreshToken(responseJson.refresh_token);
 					}
 				})
 				.then( this.props.navigation.navigate('Home', { subreddit: 'all'}))
