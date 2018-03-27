@@ -6,7 +6,7 @@ import PostList from './components/postList';
 import Header from './components/header';
 import Post from './components/post';
 import Login from './components/login';
-import ImageView from './components/ImageView';
+import Target from './components/Target';
 import SplashScreen from './components/splashscreen';
 import { Navigation } from 'react-native-navigation';
 
@@ -26,8 +26,8 @@ const RootStack = StackNavigator({
   Login: {
     screen: Login,
   },
-  ImageView: {
-    screen: ImageView,
+  Target: {
+    screen: Target,
   }
 
 }, {headerMode: 'none'} );

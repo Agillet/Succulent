@@ -12,7 +12,6 @@ class PostList extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log( this.props.navigation.state.params.subreddit);
     this.state = ({
       loading: true,
       refreshing: false,
@@ -25,7 +24,6 @@ class PostList extends React.Component {
   }
 
 	fetchData = () => {
-		console.log('state :' + this.state.subreddit);
     	return Client.fetchHot(this.state.subreddit)
 			.then(data => {
 		  		if(data.error) {
@@ -42,7 +40,6 @@ class PostList extends React.Component {
   	}
 
   fetchMore = () => {
-    console.log('end reached...');
     return Client.fetchNext(this.state.subreddit, this.state.after)
     .then(data => {
       var feed;
@@ -93,7 +90,7 @@ class PostList extends React.Component {
   }
 
   navigateToPost = (data) => {
-	  this.props.navigation.navigate('ImageView', { data: data })
+	  this.props.navigation.navigate('Target', { data: data })
   }
 
   render() {

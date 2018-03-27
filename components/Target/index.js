@@ -1,7 +1,9 @@
 import React from 'react';
 import { Text, View, Image, Dimensions, WebView } from 'react-native';
 import { Video } from 'expo';
-class PostView extends React.Component {
+import Transformer from '../Transformer/Transformer';
+
+class Target extends React.Component {
 
     state = {
         imgWidth: 0,
@@ -15,52 +17,39 @@ class PostView extends React.Component {
         const data = this.props.navigation.state.params.data;
         const width = data.preview.images.slice(-1)[0].source.width;
         const height = data.preview.images.slice(-1)[0].source.height;
-        console.log(this.state.height);
-        console.log(this.state.width);
         const regex = /(.*)\.(gif|jpg|jpeg|tiff|png|gifv)$/ ;
-        let url = data.url;
+        let url ='https://imgur.com/gallery/bLkBh';
         let type = '';
         console.log(data.domain);
+        let params = {};
         // if(url.match(regex)) {
 
             switch(data.domain) {
                 case 'i.imgur.com': 
-                    if(url.match(regex)[2] === 'gifv') {
-                        url = url.substring(0, url.length - 4);
-                        url += 'mp4';
-                        type = 'gifv';
-                    } else{
-                        type = 'image';
-                    }
+                    params = Transformer.i_imgur(url);
+                    url = params.url;
+                    type = params.type;    
                     break;
                 case 'imgur.com':
-                    if (!url.match(regex)) {
-                        url += '.jpg';
-                        type = 'image';
-                    } else if(url.match(regex)[2] === 'gifv') {
-                        url = url.substring(0, url.length - 4);
-                        url += 'mp4';
-                        type = 'gifv';
-                    }      
+                    params = Transformer.imgur(url);
+                    url = params.url;
+                    type = params.type;    
                     break;
                 case 'v.redd.it' :
-                console.log(data);
-                    type='gifv';
-                    url += '/DASH_600_K';
+                    params = Transformer.v_reddit(url);
+                    url = params.url;
+                    type = params.type; 
                     break;
                 case 'i.redd.it':
-                    if (!url.match(regex)) {
-                        url += '.jpg';
-                    }
-                    type = 'image';
+                    params = Transformer.i_reddit(url);
+                    url = params.url;
+                    type = params.type;                     
                     break;
                 case 'gfycat.com' : 
-                    type = 'gifv';
-                    let pattern = /(https:\/\/)(gfycat.com\/.*)/ ;
-                    urlArray = url.match(pattern);
-                    url = urlArray[1] + 'giant.' + urlArray[2] + '.mp4' ;
-                    console.log(urlArray);
-                    break;
+                    params = Transformer.gfycat(url) ;
+                    url = params.url;
+                    type = params.type;
+                    break;    
                 default :
                     type = 'link';
                     break;
@@ -80,8 +69,6 @@ class PostView extends React.Component {
                     <Image 
                         source =  {{ uri: this.state.url }}
                         style = {{ width: this.state.imgWidth, height: this.state.imgHeight }}
-                        onLoadStart = { () => console.log('loading') }
-                        onLoadEnd = { () => console.log('loading Ended') }
                     />
                 )
             } else  if (this.state.type === 'link'){
@@ -119,4 +106,4 @@ class PostView extends React.Component {
     }
 }
 
-export default PostView;
+export default Target;
