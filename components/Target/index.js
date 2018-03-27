@@ -18,12 +18,10 @@ class Target extends React.Component {
         const width = data.preview.images.slice(-1)[0].source.width;
         const height = data.preview.images.slice(-1)[0].source.height;
         const regex = /(.*)\.(gif|jpg|jpeg|tiff|png|gifv)$/ ;
-        let url ='https://imgur.com/gallery/bLkBh';
+        let url = data.url;
         let type = '';
         console.log(data.domain);
         let params = {};
-        // if(url.match(regex)) {
-
             switch(data.domain) {
                 case 'i.imgur.com': 
                     params = Transformer.i_imgur(url);
