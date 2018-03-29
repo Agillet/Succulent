@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FlatList, ActivityIndicator, Text, View, AsyncStorage  } from 'react-native';
 import { StackNavigator } from 'react-navigation';
@@ -8,7 +7,6 @@ import Post from './components/post';
 import Login from './components/login';
 import Target from './components/Target';
 import SplashScreen from './components/splashscreen';
-import { Navigation } from 'react-native-navigation';
 
 const RootStack = StackNavigator({
   SplashScreen: {

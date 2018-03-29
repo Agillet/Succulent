@@ -1,7 +1,18 @@
 import React from 'react';
-import { Text, View, Image, Dimensions, WebView, ScrollView } from 'react-native';
+import { 
+    Text, 
+    View, 
+    Image,
+    WebView, 
+    Dimensions, 
+    ScrollView, 
+    BackHandler, 
+    ActivityIndicator
+ } from 'react-native';
 import { Video } from 'expo';
 import Transformer from '../Transformer/Transformer';
+import { style } from './style';
+
 
 class Target extends React.Component {
 
@@ -15,7 +26,6 @@ class Target extends React.Component {
 
     componentDidMount() {
         const data = this.props.navigation.state.params.data;
-
         if(data.is_self) {
             this.setState({type: 'self', loading: false});
             return;
@@ -25,7 +35,6 @@ class Target extends React.Component {
         const regex = /(.*)\.(gif|jpg|jpeg|tiff|png|gifv)$/ ;
         let url = data.url;
         let type = '';
-        // console.log(data);
         let params = {};
 
         switch(data.domain) {
@@ -72,7 +81,7 @@ class Target extends React.Component {
         if(this.state.loading === false) {
             if(this.state.type === 'image') {
                 return (
-                    <ScrollView>
+                    <ScrollView contentContainerStyle = { style.container } >
                     <Image 
                         source =  {{ uri: this.state.url }}
                         style = {{ width: this.state.imgWidth, height: this.state.imgHeight }}
@@ -87,24 +96,24 @@ class Target extends React.Component {
                 );
             } else if (this.state.type === 'gifv') {
                 return (
-                    <Video
-                        source={{ uri: this.state.url }}
-                        rate={1.0}
-                        volume={1.0}
-                        isMuted={false}
-                        resizeMode="cover"
-                        shouldPlay
-                        isLooping
-                        style={{ width: this.state.imgWidth, height: this.state.imgHeight }}
-                        onLoadStart={() => { console.log('loading')}}
-                        onLoadStart={() => { console.log('loading end')}}
-                    />
-
-
+                    <View style = { style.container } >
+                        <Video
+                            source={{ uri: this.state.url }}
+                            rate={1.0}
+                            volume={1.0}
+                            isMuted={false}
+                            resizeMode="cover"
+                            shouldPlay
+                            isLooping
+                            style={{ width: this.state.imgWidth, height: this.state.imgHeight }}
+                            onLoadStart={() => { console.log('loading')}}
+                            onLoadStart={() => { console.log('loading end')}}
+                        />
+                        </View>
                 )
             } else if (this.state.type === 'self') {
                 return (
-                    <View>
+                    <View style = { style.container } >
                         <Text>Not supported yet</Text>
                     </View>
                 )

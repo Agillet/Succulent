@@ -47,10 +47,7 @@ class RedditClient{
   }
 
   async fetchHot(subreddit) {  
-    console.log('fetching hot...');
-  const token = await this.getToken();
-  console.log('with token :');
-  console.log(token);
+    const token = await this.getToken();
     const url = this.baseUrl + subreddit + this.jsonPostfix + '?limit=20' ;
     return (
       fetch( url, {
@@ -79,6 +76,7 @@ class RedditClient{
   
   
   async fetchNext(subreddit, after) {
+    console.log(after);
     const token = await this.getToken();
     return (
       fetch(this.baseUrl + subreddit + this.jsonPostfix + '?limit=20&after=' + after, {
@@ -101,6 +99,7 @@ class RedditClient{
     async refreshToken() {
     console.log('refreshing token...');
     const refresh_token = await this.getRefreshToken();
+    console.log(refresh_token);
 		return (
         fetch(
           'https://www.reddit.com/api/v1/access_token',

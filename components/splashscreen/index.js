@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import Client from '../../api';
+import { NavigationActions } from 'react-navigation'
 
 class SplashScreen extends React.Component {
 
@@ -9,11 +10,11 @@ class SplashScreen extends React.Component {
         Client.getToken().then( ret => {
             if(ret.token.error || ret === 'undefined') {
                 console.log('splashscreen to login...');
-                this.props.navigation.navigate('Login');
+                this.props.navigation.replace('Login');
                 return; 
             } else {
             console.log('splashscreen to home...');
-            this.props.navigation.navigate('Home', { subreddit: 'all'});
+            this.props.navigation.replace('Home', { subreddit: 'all'});
             }
         })
         .catch(err => {
@@ -21,10 +22,10 @@ class SplashScreen extends React.Component {
             switch (err.name) {
                 case 'NotFoundError':
                     console.log('splashscreen to login...');
-                    this.props.navigation.navigate('Login');
+                    this.props.navigation.replace('Login');
                 break;
                 default :
-                    this.props.navigation.navigate('Home', { subreddit: 'all'});
+                    this.props.navigation.replace('Home', { subreddit: 'all'});
                 break;
             }
         });       
