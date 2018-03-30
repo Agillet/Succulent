@@ -10,7 +10,7 @@ import {
     ActivityIndicator
  } from 'react-native';
 import { Video } from 'expo';
-import Transformer from '../Transformer/Transformer';
+import Transformer from '../../Transformer/Transformer';
 import { style } from './style';
 
 
@@ -70,60 +70,59 @@ class Target extends React.Component {
         const screenWidth = Dimensions.get('window').width;
         const scaleFactor = width / screenWidth
         const imageHeight = height / scaleFactor;
-        console.log('image ' +imageHeight)
-        console.log('screen ' +  Dimensions.get('window').height)
         this.setState({type: type, imgWidth: screenWidth, imgHeight: imageHeight, loading: false, url: url})
-        // }
     }
 
     render(){
         console.log(this.state.url);
         if(this.state.loading === false) {
-            if(this.state.type === 'image') {
-                return (
-                    <ScrollView contentContainerStyle = { style.container } >
-                    <Image 
-                        source =  {{ uri: this.state.url }}
-                        style = {{ width: this.state.imgWidth, height: this.state.imgHeight }}
-                    />
-                    </ScrollView>
-                )
-            } else  if (this.state.type === 'link'){
-                return (
-                    <WebView 
-                        source = {{ uri: this.state.url }}
-                    />
-                );
-            } else if (this.state.type === 'gifv') {
-                return (
-                    <View style = { style.container } >
-                        <Video
-                            source={{ uri: this.state.url }}
-                            rate={1.0}
-                            volume={1.0}
-                            isMuted={false}
-                            resizeMode="cover"
-                            shouldPlay
-                            isLooping
-                            style={{ width: this.state.imgWidth, height: this.state.imgHeight }}
-                            onLoadStart={() => { console.log('loading')}}
-                            onLoadStart={() => { console.log('loading end')}}
-                        />
+            switch (this.state.type) {
+                case 'image':
+                    return (
+                        <ScrollView contentContainerStyle = { style.container } >
+                            <Image 
+                                source =  {{ uri: this.state.url }}
+                                style = {{ width: this.state.imgWidth, height: this.state.imgHeight }}
+                            />
+                        </ScrollView>
+                    );
+                    break;
+                case 'gifv':
+                    return (
+                        <View style = { style.container } >
+                            <Video
+                                source={{ uri: this.state.url }}
+                                rate={1.0}
+                                volume={1.0}
+                                isMuted={false}
+                                resizeMode="cover"
+                                shouldPlay
+                                isLooping
+                                style={{ width: this.state.imgWidth, height: this.state.imgHeight }}
+                                onLoadStart={() => { console.log('loading')}}
+                                onLoadStart={() => { console.log('loading end')}}
+                            />
                         </View>
-                )
-            } else if (this.state.type === 'self') {
-                return (
-                    <View style = { style.container } >
-                        <Text>Not supported yet</Text>
-                    </View>
-                )
+                    );
+                    break;
+                case 'self':
+                    return (
+                        <View style = { style.container } >
+                            <Text>Not supported yet</Text>
+                        </View>
+                    )
+                    break;
+                default :
+                    return (
+                        <WebView 
+                            source = {{ uri: this.state.url }}
+                        />
+                    );
+                    break;
             }
-
         } else {
             return (
-                <View>
-                    <Text> Loading </Text>
-                </View>
+                <ActivityIndicator />
             );
         }
     }

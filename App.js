@@ -4,6 +4,7 @@ import { StackNavigator } from 'react-navigation';
 import PostList from './components/postList';
 import Header from './components/header';
 import Post from './components/post';
+import CommentView from './components/comments/CommentView';
 import Login from './components/login';
 import Target from './components/Target';
 import SplashScreen from './components/splashscreen';
@@ -26,6 +27,9 @@ const RootStack = StackNavigator({
   },
   Target: {
     screen: Target,
+  },
+  Comments: {
+    screen: CommentView,
   }
 
 }, {headerMode: 'none'} );

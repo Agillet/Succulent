@@ -13,10 +13,12 @@ render() {
     return  (
         <View style = { style.header } >
             <Text 
-            style = {style.title }  
-            adjustsFontSizeToFit 
-            numberOfLines={2}
-            > { this.props.title } </Text>
+                style = {style.title }  
+                adjustsFontSizeToFit 
+                numberOfLines={2}
+            > 
+                { this.props.title } 
+            </Text>
             <View   style = { style.searchBar }>
                 <SearchBar
                     lightTheme

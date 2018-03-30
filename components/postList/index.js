@@ -22,7 +22,6 @@ class PostList extends React.Component {
     super(props);
     this.backButtonListener = null;
     this.state = ({
-		// loading: true,
 		refreshing: true,
 		subreddit: this.props.navigation.state.params.subreddit,
 		loadingMore: false
@@ -53,7 +52,7 @@ class PostList extends React.Component {
   fetchMore = () => {
   	this.setState({loadingMore: true});
     	return(
-			 Client.fetchNext(this.state.subreddit, this.state.after)
+			 Client.fetchHot(this.state.subreddit, this.state.after)
 			.then(data => {
 				let feed;
 				if(!data || data.length === 0 || !this.state.posts) {
@@ -102,55 +101,54 @@ class PostList extends React.Component {
 	  this.props.navigation.navigate('Target', { data: data })
   }
 
-  renderPost = (item) => {
-    return (
-      <View style = { style.post } >
-        <Post 
-          data={ item.data }  
-        />
-        <TouchableOpacity
-          onPress = { () => this.navigateToPost(item.data ) }
-        >
-          <Image 
-            source = {{ uri: item.data.thumbnail }}
-            style={ style.thumbnail }
-          />  
-        </TouchableOpacity>
-      </View>
-    )
-
-    renderLoading = () => {
-      return (
-        <ActivityIndicator />
-      )
-    }
+  navigateToComment = (data) => {
+	this.props.navigation.navigate('Comments', { data: data });
   }
 
-  render() {
-    const { navigate } = this.props.navigation
-    // if(this.state.loading === false ) {
+	renderPost = (item) => {
+		return (
+	 		<View style = { style.post } >
+				<Post 
+					  data={ item.data }  
+					  _onPress = {this.navigateToComment }
+				/>
+				<TouchableOpacity
+          			onPress = { () => this.navigateToPost(item.data ) }
+				>
+          			<Image 
+            			source = {{ uri: item.data.thumbnail }}
+            			style={ style.thumbnail }
+          			/>  
+        		</TouchableOpacity>
+      		</View>
+		)
+	}
+
+    renderLoading = () => {
+    	return (
+        	<ActivityIndicator />
+      	)
+	}
+
+	render() {
+	    const { navigate } = this.props.navigation
       	return (
       		<View>
-        		<FlatList
-              		data = { this.state.posts }
-					renderItem = {({item}) => this.renderPost(item)}
-					keyExtractor = { (item, index) => index }
-					refreshing = { this.state.refreshing }
-					onRefresh = { this.handleRequest }
-					ItemSeparatorComponent={ () => <Separator /> }
-					onEndReachedThreshold = { 1 }
-					onEndReached = { this.handleMore }
-					ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
-					stickyHeaderIndices={[0]} 
+				<FlatList
+              			data = { this.state.posts }
+						renderItem = {({item}) => this.renderPost(item)}
+						keyExtractor = { (item, index) => index }
+						refreshing = { this.state.refreshing }
+						onRefresh = { this.handleRequest }
+						ItemSeparatorComponent={ () => <Separator /> }
+						onEndReachedThreshold = { 1 }
+						onEndReached = { this.handleMore }
+						ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
+						stickyHeaderIndices={[0]} 
         		/> 
     		</View>
       	);
-    // } else {
-    //   	return (
-    //     	<ActivityIndicator />
-    //   )
-    // }
-  }
+	}
 }
 
 export default PostList;
