@@ -19,20 +19,34 @@ import {
       }
     }
 
+    renderLoader = () => {
+        return (
+            <ActivityIndicator />
+        )
+    }
+
     _renderRepliesSection = () => {
-        const repliesSection =
-        (<View>
-          <View style={styles.rowContainer}>
-            <Text onPress={this._toggleReplies} style={styles.repliesBtnText}>
-            Replies
-            </Text>
-            <Image
-              style={[styles.disclosure, styles.muted]}
-              source={this.state.repliesShown ? disclosure90 : disclosure}
-            />
-          </View>
-            {this.state.repliesShown && this._renderReplies()}
-        </View>);
+        if('children' in this.props.comment.data) {
+            return  (
+                <View>
+                    <Text>Load More Comments..</Text>
+                </View>
+            )
+        }
+        let repliesSection =
+            (<View>
+            <View style={styles.rowContainer}>
+                <Text onPress={this._toggleReplies} style={styles.repliesBtnText}>
+                Replies
+                </Text>
+                <Image
+                style={[styles.disclosure, styles.muted]}
+                source={this.state.repliesShown ? disclosure90 : disclosure}
+                />
+            </View>
+                {this.state.repliesShown && this._renderReplies()}
+            </View>);
+    
         return repliesSection;
     }
   
@@ -43,13 +57,10 @@ import {
     }
   
     _renderReplies = () => {
-        if('children' in this.props.comment.data) {
-            return null;
-        }
-        if(this.props.comment.data.replies !== '' && this.props.comment.data !== 'undefined'){
+        if(this.props.comment.data.replies !== ''  && this.props.comment.data !== 'undefined'){
             return (
                 <View style={styles.repliesContainer}>
-                <CommentList comments={this.props.comment.data.replies.data.children}></CommentList>
+                    <CommentList comments={this.props.comment.data.replies.data.children}></CommentList>
                 </View>
             )
         } else {
@@ -59,15 +70,15 @@ import {
   
 render() {
     return (
-      <View >
-        <View style={styles.rowContainer}>
-          <Text style={styles.author}>{this.props.comment.data.author + ' '}</Text>
+        <View >
+            <View style={styles.rowContainer}>
+                <Text style={styles.author}>{this.props.comment.data.author + ' '}</Text>
+            </View>
+            <View style={styles.postDetailsContainer}>
+                <Text style={styles.commentBody}>{this.props.comment.data.body}</Text>
+                    {this._renderRepliesSection()}
+            </View>
         </View>
-        <View style={styles.postDetailsContainer}>
-          <Text style={styles.commentBody}>{this.props.comment.data.body}</Text>
-          {this._renderRepliesSection()}
-        </View>
-      </View>
     );
   }
 }

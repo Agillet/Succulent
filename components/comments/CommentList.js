@@ -24,11 +24,11 @@ import {
     
     render() {
         return (
-         <FlatList
-            data = { this.props.comments }
-            keyExtractor = { (item, index) => index }
-            renderItem = { ({item}) => this.renderComment(item)}
-           />
+            <FlatList
+                data = { this.props.comments }
+                keyExtractor = { (item, index) => index }
+                renderItem = { ({item}) => this.renderComment(item)}
+            />
         );
     }
  }

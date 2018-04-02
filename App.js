@@ -42,6 +42,7 @@ export default class App extends React.Component {
 
   render(){
     // storage.remove({key: 'token'});
+    // storage.remove({key: 'refreshToken'});
     return <RootStack />
   }
 }

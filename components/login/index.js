@@ -7,14 +7,11 @@ import Client from '../../api';
 class Login extends React.Component {
 
 	goHome = () => {
-    	console.log('going home...');
     	this.props.navigation.navigate('Home', { subreddit: 'all'} )
   	}
 
 	onNavigationStateChange = (navState) => {
-		console.log('navigation changed');
 		if (navState.url.indexOf('https://www.google.fr') === 0) {
-			console.log('getting token from login')
             const regex = /^(https:\/\/www.google.fr\/\?state=toto&code=)(.*)?$/ ;
           	return( 
 				Client.fetchToken(navState.url.match(regex)[2])

@@ -4,7 +4,7 @@ export const style = StyleSheet.create({
     post: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: '#212223',
+      backgroundColor: '#0b1a33',
       minHeight: 150,
     },
 

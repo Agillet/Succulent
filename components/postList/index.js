@@ -11,118 +11,107 @@ import {
 import Header from '../header';
 import  Post from '../post';
 import Client from '../../api';
-import Separator from '../separator';
 import { style } from './style';
 import stylePost from '../post/style';
 
 
 class PostList extends React.Component {
 
-  constructor(props) {
+    constructor(props) {
     super(props);
     this.backButtonListener = null;
     this.state = ({
-		refreshing: true,
-		subreddit: this.props.navigation.state.params.subreddit,
-		loadingMore: false
+        refreshing: true,
+        subreddit: this.props.navigation.state.params.subreddit,
+        loadingMore: false
     });
-  }
+    }
 
-  componentWillMount = () => {
+    componentWillMount = () => {
     this.fetchData();
     ;
-  }
+    }
 
-	fetchData = () => {
-    	return Client.fetchHot(this.state.subreddit)
-			.then(data => {
-		  		if(data.error) {
-					setTimeout(() => { this.fetchData() }, 5000);
-				} else {
-        			this.setState(state => ({
-          			posts: data.children,
-					after: data.after,
-          			loading: false,
-          			refreshing: false,
-				}));
-			}
-      	});
-  	}
+    fetchData = () => {
+        return Client.fetchHot(this.state.subreddit)
+            .then(data => {
 
-  fetchMore = () => {
-  	this.setState({loadingMore: true});
-    	return(
-			 Client.fetchHot(this.state.subreddit, this.state.after)
-			.then(data => {
-				let feed;
-				if(!data || data.length === 0 || !this.state.posts) {
-					feed = this.state.posts;
-				} else {
-					feed = this.state.posts.concat(data.children);
-				}
-				this.setState({
-					posts: feed,
-					after: data.after,
-					loadingMore: false,
-					refreshing: false,
-				});
-			})
-		)
-  	}
+                    this.setState(state => ({
+                    posts: data.children,
+                    after: data.after,
+                    loading: false,
+                    refreshing: false,
+                }));
+            }
+        );
+    }
 
-  handleRequest = () => {
+    fetchMore = () => {
+    this.setState({loadingMore: true});
+        return(
+                Client.fetchHot(this.state.subreddit, this.state.after)
+            .then(data => {
+                let feed;
+                if(!data || data.length === 0 || !this.state.posts) {
+                    feed = this.state.posts;
+                } else {
+                    feed = this.state.posts.concat(data.children);
+                }
+                this.setState({
+                    posts: feed,
+                    after: data.after,
+                    loadingMore: false,
+                    refreshing: false,
+                });
+            })
+        )
+    }
+
+    handleRequest = () => {
     this.setState({ 
-		loading:true,
-		refreshing: true
-	}, 
-	() =>  {
-		this.fetchData();
+        loading:true,
+        refreshing: true
+    }, 
+    () =>  {
+        this.fetchData();
     });
-  }
+    }
 
-  handleMore = () => {
+    handleMore = () => {
     if(this.state.loadingMore){
-      return;
+        return;
     }
     this.fetchMore();
-  }
+    }
 
-  renderHeader = (subreddit) => {
+    renderHeader = (subreddit) => {
     return (
-      <Header title = { subreddit } handle = { this.handleSubmit } />
+        <Header title = { subreddit } handle = { this.handleSubmit } />
     )
-  }
+    }
 
-  handleSubmit = (newSubreddit) => {
+    handleSubmit = (newSubreddit) => {
     this.props.navigation.navigate('Home', { subreddit: newSubreddit });
-  }
+    }
 
-  navigateToPost = (data) => {
-	  this.props.navigation.navigate('Target', { data: data })
-  }
+    navigateToPost = (data) => {
+        console.log(data);
+        this.props.navigation.navigate('Target', { data: data })
+    }
 
-  navigateToComment = (data) => {
-	this.props.navigation.navigate('Comments', { data: data });
-  }
+    navigateToComment = (data) => {
+    this.props.navigation.navigate('Comments', { data: data });
+}
 
-	renderPost = (item) => {
-		return (
-	 		<View style = { style.post } >
-				<Post 
-					  data={ item.data }  
-					  _onPress = {this.navigateToComment }
-				/>
-				<TouchableOpacity
-          			onPress = { () => this.navigateToPost(item.data ) }
-				>
-          			<Image 
-            			source = {{ uri: item.data.thumbnail }}
-            			style={ style.thumbnail }
-          			/>  
-        		</TouchableOpacity>
-      		</View>
-		)
-	}
+    renderPost = (item) => {
+        return (
+                <Post 
+                    data={ item.data }  
+                    _onPress = {this.navigateToComment }
+                    _navigateToPost = {this.navigateToPost}
+                />
+        )
+    }
 
     renderLoading = () => {
     	return (
@@ -133,18 +122,17 @@ class PostList extends React.Component {
 	render() {
 	    const { navigate } = this.props.navigation
       	return (
-      		<View>
+      		<View style = {style.screen} >
 				<FlatList
-              			data = { this.state.posts }
-						renderItem = {({item}) => this.renderPost(item)}
-						keyExtractor = { (item, index) => index }
-						refreshing = { this.state.refreshing }
-						onRefresh = { this.handleRequest }
-						ItemSeparatorComponent={ () => <Separator /> }
-						onEndReachedThreshold = { 1 }
-						onEndReached = { this.handleMore }
-						ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
-						stickyHeaderIndices={[0]} 
+                    data = { this.state.posts }
+                    renderItem = {({item}) => this.renderPost(item)}
+                    keyExtractor = { (item, index) => index }
+                    refreshing = { this.state.refreshing }
+                    onRefresh = { this.handleRequest }
+                    onEndReachedThreshold = { 1 }
+                    onEndReached = { this.handleMore }
+                    ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
+                    stickyHeaderIndices={[0]} 
         		/> 
     		</View>
       	);

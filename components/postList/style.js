@@ -1,15 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 export const style = StyleSheet.create({
     screen : {
         backgroundColor: '#212223'
     },
     thumbnail: {
-        width: 120,
-        height: 120,
+        width: 140,
+        height: 140,
         marginLeft: 10,
         marginRight: 100,
-        // paddingRight: 150,
+        // paddingRight: 50,
         justifyContent: 'center',
       },
       post: {

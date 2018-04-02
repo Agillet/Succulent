@@ -36,7 +36,6 @@ class Target extends React.Component {
         let url = data.url;
         let type = '';
         let params = {};
-
         switch(data.domain) {
             case 'i.imgur.com': 
                 params = Transformer.i_imgur(url);
@@ -59,9 +58,9 @@ class Target extends React.Component {
                 type = params.type;                     
                 break;
             case 'gfycat.com' : 
-                params = Transformer.gfycat(url) ;
-                url = params.url;
-                type = params.type;
+                // params = Transformer.gfycat(url) ;
+                url = data.preview.reddit_video_preview.scrubber_media_url;
+                type = 'gifv';
                 break;
             default :
                 type = 'link';
@@ -99,8 +98,6 @@ class Target extends React.Component {
                                 shouldPlay
                                 isLooping
                                 style={{ width: this.state.imgWidth, height: this.state.imgHeight }}
-                                onLoadStart={() => { console.log('loading')}}
-                                onLoadStart={() => { console.log('loading end')}}
                             />
                         </View>
                     );

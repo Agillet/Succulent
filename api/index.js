@@ -48,6 +48,8 @@ class RedditClient{
   	}
 
   	setRefreshToken(refreshToken) {
+          console.log('storing :');
+          console.log(refreshToken);
     	return storage.save({
       		key: 'refreshToken',
       		data: { refreshToken }
@@ -55,9 +57,12 @@ class RedditClient{
   	}
 
 	async fetchHot(subreddit, after) {
+        console.log('fetching hot...');
+        console.log('with token');
 		const afterStr = '&&after=' + after;
-		const url = this.baseUrl + subreddit + this.jsonPostfix + '?limit=20' + afterStr;
-		const token = await this.getToken();
+		const url = this.baseUrl + subreddit + this.jsonPostfix + '?limit=25' + afterStr;
+        const token = await this.getToken();
+        console.log(token);
 		const response = await fetch(url,
 			{
 				method: 'GET',
@@ -68,9 +73,10 @@ class RedditClient{
 				}
 			}
 		);
-		const responseJson = await response.json();
+        const responseJson = await response.json();
 		if(responseJson.error){
-			this.refreshToken();
+            await this.refreshToken();
+            setTimeout(() => { this.fetchHot(subreddit,after) }, 5000);
 			return responseJson;
 		} else {
 			return responseJson.data;
@@ -97,7 +103,10 @@ class RedditClient{
 	}
 
 	async refreshToken() {
-		const refresh_token = await this.getRefreshToken();
+        console.log('refreshing token...');
+        const refresh_token = await this.getRefreshToken();
+        console.log('refresh token: ') ;
+        console.log(refresh_token); 
 		const response = await fetch(
 			this.accessTokenUrl,
 			{
@@ -106,12 +115,13 @@ class RedditClient{
 				body: 'grant_type=refresh_token&refresh_token=' + refresh_token.refreshToken,
 			}
 		);
-		const responseJson = await response.json();
+        const responseJson = await response.json();
 		if(responseJson.error) {
             console.log('error refreshing token with refresh token : ');
             console.log(refresh_token.refreshToken);
 			return;
 		} else {
+            console.log(responseJson);
 			this.storeToken(responseJson);
 		}
 	}

@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
   },
   repliesContainer: {
     flex: 1,
-    marginLeft: 5,
+    marginLeft: 15,
     marginTop: 5
   },
   disclosure: {

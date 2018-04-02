@@ -35,12 +35,12 @@ class CommentView extends Component {
         )
     }
 
-      render() {
+    render() {
         return (
-          <View style={[styles.container, styles.viewContainer]}>
-            {this.state.loading ?  this.renderLoader() :this.renderComments()}
-          </View>
-        )
+            <View style={[styles.container, styles.viewContainer]}>
+                {this.state.loading ?  this.renderLoader() :this.renderComments()}
+            </View>
+        );
       }
 }
 

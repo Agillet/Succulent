@@ -6,14 +6,11 @@ import { NavigationActions } from 'react-navigation'
 class SplashScreen extends React.Component {
 
     componentDidMount () {
-        console.log('splashscreen')
         Client.getToken().then( ret => {
             if(ret.token.error || ret === 'undefined') {
-                console.log('splashscreen to login...');
                 this.props.navigation.replace('Login');
                 return; 
             } else {
-            console.log('splashscreen to home...');
             this.props.navigation.replace('Home', { subreddit: 'all'});
             }
         })
@@ -21,7 +18,6 @@ class SplashScreen extends React.Component {
             console.warn(err.message);
             switch (err.name) {
                 case 'NotFoundError':
-                    console.log('splashscreen to login...');
                     this.props.navigation.replace('Login');
                 break;
                 default :
