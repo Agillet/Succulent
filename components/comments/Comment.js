@@ -3,20 +3,33 @@ import {
     Text, 
     View, 
     Image,
-    ActivityIndicator
+    ActivityIndicator,
+    TouchableHighlight
  } from 'react-native';
+ import { Card, CardItem, SwipeRow, Button, Icon } from 'native-base';
  import Client from '../../api';
  import CommentList from './CommentList';
  import { styles } from './styles';
- import disclosure90 from './images/disclosure90.png';
- import disclosure from './images/disclosure.png';
+ import { style } from '../post/style';
 
  class Comment extends React.Component{
     constructor(props) {
       super (props);
       this.state = {
         repliesShown: true,
+        loading: false,
       }
+    }
+
+    componentWillMount() {
+        if('children' in this.props.comment.data) {
+            console.log(this.props.comment.data);
+            this.setState({
+                'moreChildren': true, 
+                'link' : this.props.comment.data.link_id, 
+                'children' : this.props.comment.data.children,
+            });
+        }
     }
 
     renderLoader = () => {
@@ -27,23 +40,10 @@ import {
 
     _renderRepliesSection = () => {
         if('children' in this.props.comment.data) {
-            return  (
-                <View>
-                    <Text>Load More Comments..</Text>
-                </View>
-            )
+            return null;
         }
-        let repliesSection =
-            (<View>
-            <View style={styles.rowContainer}>
-                <Text onPress={this._toggleReplies} style={styles.repliesBtnText}>
-                Replies
-                </Text>
-                <Image
-                style={[styles.disclosure, styles.muted]}
-                source={this.state.repliesShown ? disclosure90 : disclosure}
-                />
-            </View>
+        let repliesSection = (
+            <View>
                 {this.state.repliesShown && this._renderReplies()}
             </View>);
     
@@ -51,6 +51,7 @@ import {
     }
   
     _toggleReplies = () => {
+        console.log(this.props.comment.data);
         this.setState({
             repliesShown: !this.state.repliesShown
       })
@@ -63,24 +64,66 @@ import {
                     <CommentList comments={this.props.comment.data.replies.data.children}></CommentList>
                 </View>
             )
-        } else {
-            return null;
-        }
+        } 
     }
-  
-render() {
-    return (
-        <View >
-            <View style={styles.rowContainer}>
-                <Text style={styles.author}>{this.props.comment.data.author + ' '}</Text>
+
+    getBorderColor = () => {
+        const colors = ['#E83030', '#E89F30', '#C3E830', '#55E830', '#30E87A', '#30E8E8', '#307AE8','#5530E8', '#C330E8', '#E8309F'];
+        return colors[this.props.comment.data.depth];
+    }
+
+    renderComment = () => {
+        if(this.state.moreChildren) {
+            return( 
+                <View style= { { marginLeft: 15} }>
+                    <Text style={styles.commentBody} onPress= {this.getMoreComments}>Load more comments</Text>
+                </View> 
+            )         
+        }
+        return (
+            <View style= { { marginLeft: 15} } >
+                <Text style={styles.commentBody} onPress= {this._toggleReplies}> {this.props.comment.data.body} </Text>
             </View>
-            <View style={styles.postDetailsContainer}>
-                <Text style={styles.commentBody}>{this.props.comment.data.body}</Text>
+        );
+    }
+
+    getMoreComments = () => {
+        const data = this.props.comment.data;
+        const response = Client.fetchMoreComments(this.state.link, this.state.children.join())
+        .then(response => console.log(response));
+    }
+
+    render() {
+        if(this.state.loading) {
+            return (
+                <ActivityIndicator />
+            )
+        } else {
+            return (
+                <View style = {{ paddingTop: 2 }}>
+                    <SwipeRow
+                        style = {{borderLeftWidth: 0.5, borderStyle: 'dashed', borderColor: this.getBorderColor(), backgroundColor: '#0b1a33', borderBottomWidth: 0}} 
+                        leftOpenValue={75}
+                        rightOpenValue={-75}
+                        left={
+                            <View  style = { {height: '100%'} }>
+                                <Button success onPress={() => alert('upvote')}  style = { {height: '50%'} }>
+                                    <Icon active name="add" />
+                                </Button>
+                                <Button danger onPress={() => alert('downvote')} style = { {height: '50%'} }>
+                                    <Icon name="add" />
+                                </Button>
+                            </View>
+                        }
+                        body={ 
+                            this.renderComment()
+                        }
+                    />
                     {this._renderRepliesSection()}
-            </View>
-        </View>
-    );
-  }
+                </View>
+            );
+        }   
+    }
 }
 
 export default Comment;

@@ -5,7 +5,7 @@ export const style = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: '#0b1a33',
-      minHeight: 150,
+    //   minHeight: 150,
     },
 
     textView: {

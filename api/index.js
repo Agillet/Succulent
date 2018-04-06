@@ -37,14 +37,14 @@ class RedditClient{
 
 	getToken() {
 		return storage.load({
-      		key : 'token',
+              key : 'token',
     	});
   	}
 
-  	getRefreshToken() {
-    	return storage.load({
-	      	key : 'refreshToken',
-    	});
+  	async getRefreshToken() {
+    	 return storage.load({
+              key : 'refreshToken',
+        });
   	}
 
   	setRefreshToken(refreshToken) {
@@ -52,7 +52,8 @@ class RedditClient{
           console.log(refreshToken);
     	return storage.save({
       		key: 'refreshToken',
-      		data: { refreshToken }
+            data: { refreshToken },
+            expires: null
     	});
   	}
 
@@ -60,9 +61,12 @@ class RedditClient{
         console.log('fetching hot...');
         console.log('with token');
 		const afterStr = '&&after=' + after;
-		const url = this.baseUrl + subreddit + this.jsonPostfix + '?limit=25' + afterStr;
-        const token = await this.getToken();
-        console.log(token);
+        const url = this.baseUrl + subreddit + this.jsonPostfix + '?limit=25' + afterStr;
+        let token = await this.getToken();
+            if(token.error) {
+                await this.refreshToken();
+                this.fetchHot(subreddit,after);
+            }
 		const response = await fetch(url,
 			{
 				method: 'GET',
@@ -75,8 +79,6 @@ class RedditClient{
 		);
         const responseJson = await response.json();
 		if(responseJson.error){
-            await this.refreshToken();
-            setTimeout(() => { this.fetchHot(subreddit,after) }, 5000);
 			return responseJson;
 		} else {
 			return responseJson.data;
@@ -86,7 +88,6 @@ class RedditClient{
 	async fetchComment(subreddit, id) {
 		const token = await this.getToken();
 		const url = this.baseUrl + subreddit +'/comments/' + id +  this.jsonPostfix;
-		console.log(url);
 		const response = await fetch(
 			url,
 			{
@@ -100,7 +101,26 @@ class RedditClient{
 		);
         const responseJson = await response.json();
 		return responseJson;
-	}
+    }
+    
+    async fetchMoreComments(link, children) {
+        const token = await this.getToken();
+        const url = 'https://oauth.reddit.com/api/morechildren.json?link=' + link +  '&&children=' + children;
+        console.log(url);
+        const response = await fetch(
+            url,
+            {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        const responseJson = await response.json();
+        console.log(responseJson);
+		return responseJson;
+    }
 
 	async refreshToken() {
         console.log('refreshing token...');

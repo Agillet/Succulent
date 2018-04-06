@@ -14,9 +14,6 @@ import { Container, Header, Content, Card, CardItem, Body, Right, SwipeRow, Icon
 
 class Post extends React.PureComponent{
 
-    sendVote(direction) {
-
-    }
 
     headerString = () => {
         const string  = this.props.data.subreddit_name_prefixed  + '   •   ' + this.props.data.ups + ' upvotes   •' ;
@@ -25,15 +22,15 @@ class Post extends React.PureComponent{
 
 render() {
     return (
-        <View style = {{ margin: 10 }}>
-            <Card style = {{borderLeftWidth: 0, borderTopWidth: 0, borderBottomWidth: 0 }}>
-                <CardItem header style =  {{backgroundColor: '#0b1628'}}>
+        <View style = {{ marginRight: 5, marginTop: 5, marginLeft: 5, marginBottom: 2 }}>
+            <Card style = {{borderLeftWidth: 0, borderTopWidth: 0, borderBottomWidth: 0, borderRightWidth: 0  }} transparent >
+                <CardItem header style =  {{backgroundColor: '#0b1628'}} >
                     <Text style= { style.title }> 
                         {this.headerString()}
                     </Text>
                 </CardItem> 
                 <SwipeRow
-                    style = {{backgroundColor: '#0b1a33'}} 
+                    style = {{backgroundColor: '#0b1a33', borderBottomWidth: 0}} 
                     leftOpenValue={75}
                     rightOpenValue={-75}
                     left={
@@ -41,7 +38,7 @@ render() {
                             <Button success onPress={() => alert('upvote')}  style = { {height: '50%'} }>
                                 <Icon active name="add" />
                             </Button>
-                            <Button danger onPress={() => alert('downvote')}>
+                            <Button danger onPress={() => alert('downvote')} style = { {height: '50%'} }>
                                 <Icon name="add" />
                             </Button>
                         </View>

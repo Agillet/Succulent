@@ -35,13 +35,14 @@ class PostList extends React.Component {
     fetchData = () => {
         return Client.fetchHot(this.state.subreddit)
             .then(data => {
-
+				{
                     this.setState(state => ({
-                    posts: data.children,
-                    after: data.after,
-                    loading: false,
-                    refreshing: false,
-                }));
+                        posts: data.children,
+                        after: data.after,
+                        loading: false,
+                        refreshing: false,
+                    }));
+                }
             }
         );
     }

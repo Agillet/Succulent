@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
   },
   comment: {
     flex: 1,
-    margin: 5,
+    marginRight: 0,
     marginBottom: 10,
     paddingLeft: 4,
     borderLeftColor: '#CACACA',
@@ -41,15 +41,8 @@ export const styles = StyleSheet.create({
   },
   repliesContainer: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: 5,
     marginTop: 5
-  },
-  disclosure: {
-    width: 9,
-    height: 8,
-    marginLeft: 2,
-    marginRight: 8,
-    marginTop: 3
   },
   muted: {
     opacity: 0.6,

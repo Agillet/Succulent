@@ -30,8 +30,8 @@ class Target extends React.Component {
             this.setState({type: 'self', loading: false});
             return;
         }
-        const width = data.preview.images.slice(-1)[0].source.width;
-        const height = data.preview.images.slice(-1)[0].source.height;
+        const width = data.preview ? data.preview.images.slice(-1)[0].source.width : 0;
+        const height = data.preview ? data.preview.images.slice(-1)[0].source.height : 0;
         const regex = /(.*)\.(gif|jpg|jpeg|tiff|png|gifv)$/ ;
         let url = data.url;
         let type = '';
