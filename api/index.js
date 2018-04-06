@@ -79,7 +79,8 @@ class RedditClient{
 		);
         const responseJson = await response.json();
 		if(responseJson.error){
-			return responseJson;
+            await this.refreshToken();
+            this.fetchHot(subreddit,after);
 		} else {
 			return responseJson.data;
 		}     

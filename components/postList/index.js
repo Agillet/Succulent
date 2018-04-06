@@ -14,13 +14,13 @@ import Client from '../../api';
 import { style } from './style';
 import stylePost from '../post/style';
 
-
 class PostList extends React.Component {
 
     constructor(props) {
     super(props);
     this.backButtonListener = null;
     this.state = ({
+        loading: true,
         refreshing: true,
         subreddit: this.props.navigation.state.params.subreddit,
         loadingMore: false
@@ -29,13 +29,12 @@ class PostList extends React.Component {
 
     componentWillMount = () => {
     this.fetchData();
-    ;
     }
 
     fetchData = () => {
         return Client.fetchHot(this.state.subreddit)
             .then(data => {
-				{
+                {
                     this.setState(state => ({
                         posts: data.children,
                         after: data.after,
@@ -50,7 +49,7 @@ class PostList extends React.Component {
     fetchMore = () => {
     this.setState({loadingMore: true});
         return(
-                Client.fetchHot(this.state.subreddit, this.state.after)
+            Client.fetchHot(this.state.subreddit, this.state.after)
             .then(data => {
                 let feed;
                 if(!data || data.length === 0 || !this.state.posts) {
@@ -92,17 +91,16 @@ class PostList extends React.Component {
     }
 
     handleSubmit = (newSubreddit) => {
-    this.props.navigation.navigate('Home', { subreddit: newSubreddit });
+        this.props.navigation.navigate('Home', { subreddit: newSubreddit });
     }
 
     navigateToPost = (data) => {
-        console.log(data);
         this.props.navigation.navigate('Target', { data: data })
     }
 
     navigateToComment = (data) => {
-    this.props.navigation.navigate('Comments', { data: data });
-}
+        this.props.navigation.navigate('Comments', { data: data });
+    }
 
     renderPost = (item) => {
         return (

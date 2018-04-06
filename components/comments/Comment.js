@@ -11,6 +11,7 @@ import {
  import CommentList from './CommentList';
  import { styles } from './styles';
  import { style } from '../post/style';
+ import Markdown from 'react-native-easy-markdown';
 
  class Comment extends React.Component{
     constructor(props) {
@@ -23,7 +24,6 @@ import {
 
     componentWillMount() {
         if('children' in this.props.comment.data) {
-            console.log(this.props.comment.data);
             this.setState({
                 'moreChildren': true, 
                 'link' : this.props.comment.data.link_id, 
@@ -51,7 +51,7 @@ import {
     }
   
     _toggleReplies = () => {
-        console.log(this.props.comment.data);
+        // console.log(this.props.comment.data);
         this.setState({
             repliesShown: !this.state.repliesShown
       })
@@ -81,9 +81,11 @@ import {
             )         
         }
         return (
-            <View style= { { marginLeft: 15} } >
-                <Text style={styles.commentBody} onPress= {this._toggleReplies}> {this.props.comment.data.body} </Text>
-            </View>
+            <TouchableHighlight  onPress= {this._toggleReplies} >
+                <View style= { { marginLeft: 15} } >
+                    <Markdown text = {{color: 'white'}} >{this.props.comment.data.body}</Markdown> 
+                </View>
+            </TouchableHighlight>
         );
     }
 

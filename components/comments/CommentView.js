@@ -57,15 +57,14 @@ class CommentView extends Component {
 
     render() {
         return (
-            <Container>
-                <Content>
-                    <Card style = {{borderLeftWidth: 0, borderTopWidth: 0, borderBottomWidth: 0, borderRightWidth: 0  }} transparent >
+            <Container style = {{ backgroundColor: 'rgba(52, 52, 52, 0.8)' }} >
+                    <Card style = {{borderLeftWidth: 0, borderTopWidth: 0, borderBottomWidth: 0, borderRightWidth: 0, }} transparent >
                         <CardItem header style =  {{backgroundColor: '#0b1628'}} >
                             <Text style= { style.title }> 
                                 {this.headerString()}
                             </Text>
                         </CardItem> 
-                        <View style={ style.post }>
+                        <View style={ style.selfPost }>
                             <View style= { style.textView }>
                                 <Text style= { style.title }> { this.props.navigation.state.params.data.title } </Text>
                             </View>
@@ -79,10 +78,10 @@ class CommentView extends Component {
                             </TouchableOpacity>
                         </View>
                     </Card>
-                </Content>
-                <View style={[styles.container, styles.viewContainer]}>
+                <View style={styles.container}>
                     {this.state.loading ?  this.renderLoader() :this.renderComments()}
                 </View>
+                
             </Container>
         );
       }

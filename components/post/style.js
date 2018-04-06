@@ -8,6 +8,13 @@ export const style = StyleSheet.create({
     //   minHeight: 150,
     },
 
+    selfPost: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#0b1a33',
+        height: '100%'
+    },
+
     textView: {
       width: '66%',
       marginLeft: 15,

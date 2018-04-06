@@ -73,7 +73,6 @@ class Target extends React.Component {
     }
 
     render(){
-        console.log(this.state.url);
         if(this.state.loading === false) {
             switch (this.state.type) {
                 case 'image':

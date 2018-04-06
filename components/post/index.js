@@ -11,6 +11,7 @@ import React from 'react';
 import { style } from './style';
 import { StackNavigator } from 'react-navigation';
 import { Container, Header, Content, Card, CardItem, Body, Right, SwipeRow, Icon, Button } from 'native-base';
+import Markdown from 'react-native-easy-markdown';
 
 class Post extends React.PureComponent{
 
@@ -44,12 +45,12 @@ render() {
                         </View>
                     }
                     body={ 
-                           <View style={ style.post }>
+                           <View style= { style.post }>
                                 <TouchableOpacity 
-                                    style= { style.textView }
+                                    style={ style.textView }
                                     onPress= {() => this.props._onPress(this.props.data)}
                                 >
-                                <Text style= { style.title }> { this.props.data.title } </Text>
+                                    <Text style= { style.title }> { this.props.data.title } </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress = { () => this.props._navigateToPost(this.props.data ) }
