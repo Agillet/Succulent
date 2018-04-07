@@ -8,6 +8,7 @@ import {
   Image, 
   ActivityIndicator
 } from 'react-native';
+import { Container, Icon, Fab } from 'native-base';
 import Header from '../header';
 import  Post from '../post';
 import Client from '../../api';
@@ -27,26 +28,29 @@ class PostList extends React.Component {
     });
     }
 
-    componentWillMount = () => {
-    this.fetchData();
+    componentDidMount = () => {
+        this.fetchData();
     }
 
     fetchData = () => {
         return Client.fetchHot(this.state.subreddit)
             .then(data => {
                 {
-                    this.setState(state => ({
-                        posts: data.children,
-                        after: data.after,
-                        loading: false,
-                        refreshing: false,
-                    }));
+                    if(data.children) {
+                        this.setState(state => ({
+                            posts: data.children,
+                            after: data.after,
+                            loading: false,
+                            refreshing: false,
+                        }));
+                    }
                 }
             }
         );
     }
 
     fetchMore = () => {
+        console.log('fetching more');
     this.setState({loadingMore: true});
         return(
             Client.fetchHot(this.state.subreddit, this.state.after)
@@ -78,7 +82,7 @@ class PostList extends React.Component {
     }
 
     handleMore = () => {
-    if(this.state.loadingMore){
+    if(this.state.loadingMore || this.state.loading){
         return;
     }
     this.fetchMore();
@@ -128,7 +132,7 @@ class PostList extends React.Component {
                     keyExtractor = { (item, index) => index }
                     refreshing = { this.state.refreshing }
                     onRefresh = { this.handleRequest }
-                    onEndReachedThreshold = { 1 }
+                    onEndReachedThreshold = { 0.5 }
                     onEndReached = { this.handleMore }
                     ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
                     stickyHeaderIndices={[0]} 

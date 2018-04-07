@@ -28,6 +28,7 @@ import {
                 data = { this.props.comments }
                 keyExtractor = { (item, index) => index }
                 renderItem = { ({item}) => this.renderComment(item)}
+                initialNumToRender = {10}
             />
         );
     }

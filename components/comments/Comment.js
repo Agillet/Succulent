@@ -13,7 +13,7 @@ import {
  import { style } from '../post/style';
  import Markdown from 'react-native-easy-markdown';
 
- class Comment extends React.Component{
+ class Comment extends React.PureComponent{
     constructor(props) {
       super (props);
       this.state = {
@@ -83,7 +83,7 @@ import {
         return (
             <TouchableHighlight  onPress= {this._toggleReplies} >
                 <View style= { { marginLeft: 15} } >
-                    <Markdown text = {{color: 'white'}} >{this.props.comment.data.body}</Markdown> 
+                    <Markdown text>{this.props.comment.data.body}</Markdown> 
                 </View>
             </TouchableHighlight>
         );

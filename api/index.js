@@ -66,6 +66,7 @@ class RedditClient{
             if(token.error) {
                 await this.refreshToken();
                 this.fetchHot(subreddit,after);
+                return;
             }
 		const response = await fetch(url,
 			{
@@ -81,6 +82,7 @@ class RedditClient{
 		if(responseJson.error){
             await this.refreshToken();
             this.fetchHot(subreddit,after);
+            return;
 		} else {
 			return responseJson.data;
 		}     

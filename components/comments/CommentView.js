@@ -6,11 +6,13 @@ import { style } from '../post/style'
 import Client from '../../api';
 import  Post from '../post';
 import { Container, Card, CardItem, Content } from 'native-base';
+import Markdown from 'react-native-easy-markdown';
 
 class CommentView extends Component {
 
     constructor(props){
         super(props);    
+        console.log(this.props.navigation.state.params.data);
         this.state = {
             loading: true
         }
@@ -70,18 +72,18 @@ class CommentView extends Component {
                             </View>
                             <TouchableOpacity
                                 onPress = { () => this.navigateToPost(this.props.navigation.state.params.data ) }
-                            >
+                                >
                                 <Image 
                                     source = {{ uri: this.props.navigation.state.params.data.thumbnail }}
                                     style={ style.thumbnail }
-                                />  
+                                    />  
                             </TouchableOpacity>
                         </View>
+                        <Markdown> { this.props.navigation.state.params.data.selftext } </Markdown>
                     </Card>
                 <View style={styles.container}>
                     {this.state.loading ?  this.renderLoader() :this.renderComments()}
                 </View>
-                
             </Container>
         );
       }
