@@ -83,7 +83,7 @@ import {
         return (
             <TouchableHighlight  onPress= {this._toggleReplies} >
                 <View style= { { marginLeft: 15} } >
-                    <Markdown text>{this.props.comment.data.body}</Markdown> 
+                    <Markdown text markdownStyles = {{color :'white'}}>{this.props.comment.data.body}</Markdown> 
                 </View>
             </TouchableHighlight>
         );

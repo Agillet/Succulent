@@ -62,12 +62,13 @@ class RedditClient{
         console.log('with token');
 		const afterStr = '&&after=' + after;
         const url = this.baseUrl + subreddit + this.jsonPostfix + '?limit=25' + afterStr;
-        let token = await this.getToken();
-            if(token.error) {
-                await this.refreshToken();
-                this.fetchHot(subreddit,after);
-                return;
-            }
+		try {
+			var token = await this.getToken();
+		} catch (error) {
+			await this.refreshToken();
+			this.fetchHot(subreddit,after);
+			return;
+		}
 		const response = await fetch(url,
 			{
 				method: 'GET',
@@ -79,13 +80,7 @@ class RedditClient{
 			}
 		);
         const responseJson = await response.json();
-		if(responseJson.error){
-            await this.refreshToken();
-            this.fetchHot(subreddit,after);
-            return;
-		} else {
-			return responseJson.data;
-		}     
+		return responseJson.data;
 	}
 
 	async fetchComment(subreddit, id) {

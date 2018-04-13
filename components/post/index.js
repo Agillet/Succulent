@@ -17,7 +17,14 @@ class Post extends React.PureComponent{
 
 
     headerString = () => {
-        const string  = this.props.data.subreddit_name_prefixed  + '   •   ' + this.props.data.ups + ' upvotes   •' ;
+        const data = this.props.data
+        const string  = data.subreddit_name_prefixed  + '   •   u/' + data.author;
+        return string;
+    }
+
+    footerString = () => {
+        const data = this.props.data
+        const string  = data.score + ' upvotes   •   ' + data.num_comments + ' comments ';
         return string;
     }
 
@@ -63,6 +70,11 @@ render() {
                             </View>
                     }
                 />
+                <CardItem footer style =  {{backgroundColor: '#0b1628'}} >
+                    <Text style= { style.title }> 
+                        {this.footerString()}
+                    </Text>
+                </CardItem> 
             </Card>
         </View>
     );

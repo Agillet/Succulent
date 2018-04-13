@@ -11,7 +11,7 @@ class SplashScreen extends React.Component {
                 this.props.navigation.replace('Login');
                 return; 
             } else {
-            this.props.navigation.replace('Home', { subreddit: 'nba'});
+            this.props.navigation.replace('Home', { subreddit: 'all'});
             }
         })
         .catch(err => {

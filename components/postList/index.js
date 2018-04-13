@@ -103,6 +103,7 @@ class PostList extends React.Component {
     }
 
     navigateToComment = (data) => {
+        console.log(data);
         this.props.navigation.navigate('Comments', { data: data });
     }
 
