@@ -10,6 +10,8 @@ class RedditClient{
 
 	baseUrl = 'https://oauth.reddit.com/r/';
 
+	baseUrlNoPrefix = 'https://oauth.reddit.com/';
+
 	accessTokenUrl = 'https://www.reddit.com/api/v1/access_token';	  
 	
 	jsonPostfix = '.json';
@@ -66,8 +68,7 @@ class RedditClient{
 			var token = await this.getToken();
 		} catch (error) {
 			await this.refreshToken();
-			this.fetchHot(subreddit,after);
-			return;
+			return fetchHot(subreddit,after);
 		}
 		const response = await fetch(url,
 			{
@@ -79,7 +80,12 @@ class RedditClient{
 				}
 			}
 		);
-        const responseJson = await response.json();
+		const responseJson = await response.json();
+		if (responseJson.error) {
+			await this.refreshToken();
+			this.fetchHot(subreddit,after);
+			return;
+		}
 		return responseJson.data;
 	}
 
@@ -103,7 +109,7 @@ class RedditClient{
     
     async fetchMoreComments(link, children) {
         const token = await this.getToken();
-        const url = 'https://oauth.reddit.com/api/morechildren.json?link=' + link +  '&&children=' + children;
+        const url = 'https://oauth.reddit.com/api/morechildren.json?api_type=json&link_id=' + link +  '&sort=confidence&children=' + children;
         console.log(url);
         const response = await fetch(
             url,
@@ -115,8 +121,8 @@ class RedditClient{
                 },
             }
         );
+        // console.log(response);
         const responseJson = await response.json();
-        console.log(responseJson);
 		return responseJson;
     }
 
@@ -155,6 +161,25 @@ class RedditClient{
 		);
 		const responseJson = await response.json();
 		return responseJson;		
+	}
+
+	async vote(id, dir) {
+		const token = await this.getToken();
+		const url = this.baseUrlNoPrefix + 'api/vote';
+		const response = await fetch(
+			url,
+			{
+				method: 'POST',
+				headers: 
+				{
+					'Authorization': `Bearer  ${token.token.access_token}` ,
+					'Content-Type': 'application/json',
+				},
+				body: 'id='+ id + '&dir=' + dir,
+			}
+		);
+        const responseJson = await response.json();
+		return responseJson;
 	}
 
 }

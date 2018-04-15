@@ -26,7 +26,6 @@ import {
         if('children' in this.props.comment.data) {
             this.setState({
                 'moreChildren': true, 
-                'link' : this.props.comment.data.link_id, 
                 'children' : this.props.comment.data.children,
             });
         }
@@ -40,6 +39,7 @@ import {
 
     _renderRepliesSection = () => {
         if('children' in this.props.comment.data) {
+            console.log(this.props.comment.data); 
             return null;
         }
         let repliesSection = (
@@ -51,7 +51,6 @@ import {
     }
   
     _toggleReplies = () => {
-        // console.log(this.props.comment.data);
         this.setState({
             repliesShown: !this.state.repliesShown
       })
@@ -61,7 +60,7 @@ import {
         if(this.props.comment.data.replies !== ''  && this.props.comment.data !== 'undefined'){
             return (
                 <View style={styles.repliesContainer}>
-                    <CommentList comments={this.props.comment.data.replies.data.children}></CommentList>
+                    <CommentList comments={this.props.comment.data.replies.data.children} link = {this.props.link} ></CommentList>
                 </View>
             )
         } 
@@ -76,14 +75,14 @@ import {
         if(this.state.moreChildren) {
             return( 
                 <View style= { { marginLeft: 15} }>
-                    <Text style={styles.commentBody} onPress= {this.getMoreComments}>Load more comments</Text>
+                    <Text style={styles.commentBody} onPress= {() => this.getMoreComments()}>Load more comments</Text>
                 </View> 
             )         
         }
         return (
             <TouchableHighlight  onPress= {this._toggleReplies} >
                 <View style= { { marginLeft: 15} } >
-                    <Markdown text markdownStyles = {{color :'white'}}>{this.props.comment.data.body}</Markdown> 
+                    <Markdown>{this.props.comment.data.body}</Markdown> 
                 </View>
             </TouchableHighlight>
         );
@@ -91,7 +90,8 @@ import {
 
     getMoreComments = () => {
         const data = this.props.comment.data;
-        const response = Client.fetchMoreComments(this.state.link, this.state.children.join())
+        console.log(this.state.children.join());
+        const response = Client.fetchMoreComments(this.props.link, this.state.children.join())
         .then(response => console.log(response));
     }
 

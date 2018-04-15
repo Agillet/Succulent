@@ -12,7 +12,6 @@ class CommentView extends Component {
 
     constructor(props){
         super(props);    
-        console.log(this.props.navigation.state.params.data);
         this.state = {
             loading: true
         }
@@ -34,7 +33,7 @@ class CommentView extends Component {
     }
 
     renderComments() {
-    return( <CommentList comments={this.state.comments} /> );
+    return( <CommentList comments={this.state.comments} link = {this.props.navigation.state.params.data.name} /> );
     }
     
     renderLoader() {
@@ -60,7 +59,7 @@ class CommentView extends Component {
     render() {
         return (
             <Container style = {{ backgroundColor: 'rgba(52, 52, 52, 0.8)' }} >
-                    <Card style = {{borderLeftWidth: 0, borderTopWidth: 0, borderBottomWidth: 0, borderRightWidth: 0, }} transparent >
+                    <Card style = {{borderLeftWidth: 0, borderTopWidth: 0, borderBottomWidth: 0, borderRightWidth: 0 }} >
                         <CardItem header style =  {{backgroundColor: '#0b1628'}} >
                             <Text style= { style.title }> 
                                 {this.headerString()}
@@ -72,7 +71,7 @@ class CommentView extends Component {
                             </View>
                             <TouchableOpacity
                                 onPress = { () => this.navigateToPost(this.props.navigation.state.params.data ) }
-                                >
+                            >
                                 <Image 
                                     source = {{ uri: this.props.navigation.state.params.data.thumbnail }}
                                     style={ style.thumbnail }
@@ -81,9 +80,12 @@ class CommentView extends Component {
                         </View>
                         <Markdown> { this.props.navigation.state.params.data.selftext } </Markdown>
                     </Card>
+                    <Content>
                 <View style={styles.container}>
                     {this.state.loading ?  this.renderLoader() :this.renderComments()}
                 </View>
+                </Content>
+                
             </Container>
         );
       }

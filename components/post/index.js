@@ -9,9 +9,11 @@ import {
 } from 'react-native';
 import React from 'react';
 import { style } from './style';
+import Client from '../../api';
 import { StackNavigator } from 'react-navigation';
 import { Container, Header, Content, Card, CardItem, Body, Right, SwipeRow, Icon, Button } from 'native-base';
 import Markdown from 'react-native-easy-markdown';
+import { Ionicons } from '@expo/vector-icons';
 
 class Post extends React.PureComponent{
 
@@ -28,6 +30,24 @@ class Post extends React.PureComponent{
         return string;
     }
 
+    renderActions = () => {
+        return (
+        <View  style = { {height: '100%', flexDirection: 'row', backgroundColor: 'red', justifyContent: 'space-between'}}>
+            <Button onPress={() => this.vote(this.props.data.id, 1)} style = {{height: '100%'}}>
+                <Ionicons name="md-arrow-up" />
+            </Button>
+            <Button onPress={() => this.vote(this.props.data.id, -1)} style = {{height: '100%'}}>
+                <Ionicons name="md-arrow-down" />
+            </Button>
+        </View>
+        );
+    }
+
+    vote = (id, dir) => {
+        console.log(this.props.data);
+        return Client.vote(id, dir);
+    }
+
 render() {
     return (
         <View style = {{ marginRight: 5, marginTop: 5, marginLeft: 5, marginBottom: 2 }}>
@@ -38,19 +58,10 @@ render() {
                     </Text>
                 </CardItem> 
                 <SwipeRow
-                    style = {{backgroundColor: '#0b1a33', borderBottomWidth: 0}} 
-                    leftOpenValue={75}
-                    rightOpenValue={-75}
-                    left={
-                        <View  style = { {height: '100%'} }>
-                            <Button success onPress={() => alert('upvote')}  style = { {height: '50%'} }>
-                                <Icon active name="add" />
-                            </Button>
-                            <Button danger onPress={() => alert('downvote')} style = { {height: '50%'} }>
-                                <Icon name="add" />
-                            </Button>
-                        </View>
-                    }
+                    style = {{backgroundColor: '#0b1a33', borderBottomWidth: 0, justifyContent: 'center',}} 
+                    leftOpenValue= {200}
+                    swipeToOpenPercent = {50}
+                    left={this.renderActions()}
                     body={ 
                            <View style= { style.post }>
                                 <TouchableOpacity 

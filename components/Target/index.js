@@ -12,7 +12,7 @@ import {
 import { Video } from 'expo';
 import Transformer from '../../Transformer/Transformer';
 import { style } from './style';
-
+import ResponsiveImage from 'react-native-responsive-image';
 
 class Target extends React.Component {
 
@@ -68,7 +68,7 @@ class Target extends React.Component {
         }
         const screenWidth = Dimensions.get('window').width;
         const scaleFactor = width / screenWidth
-        const imageHeight = height / scaleFactor;
+        const imageHeight = height / scaleFactor ;
         this.setState({type: type, imgWidth: screenWidth, imgHeight: imageHeight, loading: false, url: url})
     }
 
@@ -78,9 +78,10 @@ class Target extends React.Component {
                 case 'image':
                     return (
                         <ScrollView contentContainerStyle = { style.container } >
-                            <Image 
-                                source =  {{ uri: this.state.url }}
-                                style = {{ width: this.state.imgWidth, height: this.state.imgHeight }}
+                            <ResponsiveImage 
+                                source={{uri: this.state.url}} 
+                                initWidth={this.state.imgWidth } 
+                                initHeight={ this.state.imgHeight }
                             />
                         </ScrollView>
                     );
