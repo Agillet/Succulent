@@ -11,6 +11,7 @@ class SplashScreen extends React.Component {
                 this.props.navigation.replace('Login');
                 return; 
             } else {
+            Client.fetchMySubreddits();       
             this.props.navigation.replace('Home', { subreddit: 'all'});
             }
         })
@@ -24,7 +25,7 @@ class SplashScreen extends React.Component {
                     this.props.navigation.replace('Home', { subreddit: 'all'});
                 break;
             }
-        });       
+        });
     }
 
   render(){

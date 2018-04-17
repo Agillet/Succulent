@@ -8,6 +8,8 @@ import CommentView from './components/comments/CommentView';
 import Login from './components/login';
 import Target from './components/Target';
 import SplashScreen from './components/splashscreen';
+import ListContainer from './containers/ListContainer';
+
 
 const RootStack = StackNavigator({
   SplashScreen: {

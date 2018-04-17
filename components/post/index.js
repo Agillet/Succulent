@@ -44,7 +44,6 @@ class Post extends React.PureComponent{
     }
 
     vote = (id, dir) => {
-        console.log(this.props.data);
         return Client.vote(id, dir);
     }
 

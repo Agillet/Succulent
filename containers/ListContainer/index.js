@@ -1,11 +1,32 @@
 import React, { Component } from 'react';
-import { View, Text, DrawerLayoutAndroid } from 'react-native';
+import { View, Text, DrawerLayoutAndroid, FlatList } from 'react-native';
+import Client from '../../api';
 
-class ListContainer extends Component {
+class ListContainer extends React.PureComponent {
+
+	componentDidMount() {
+		this.getListSubreddits();
+	}
+	
+	getListSubreddits = () => {
+		Client.getMySubreddits().then( response => {
+			this.setState({
+				subreddits : response.data,
+			});	
+		}); 
+	}
+
+	
+	
   render() {
-    var navigationView = (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
-        <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
+	let navigationView = (
+		<View style={{flex: 1, backgroundColor: '#fff'}}>
+		<Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
+		<FlatList
+			data = { this.state.subreddits }
+			renderItem = {({item}) => this.renderPost(item)}
+			keyExtractor = { (item, index) => index }
+		/>
       </View>
     );
     return (

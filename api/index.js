@@ -41,7 +41,18 @@ class RedditClient{
 		return storage.load({
               key : 'token',
     	});
-  	}
+	}
+	  
+	storeMySubreddits(data) {
+		storage.save({
+			key: 'mySubreddits',
+			data: { data },
+		});
+	}
+
+	getMySubreddits() {
+		return storage.load({key: 'mySubreddits'})
+	}
 
   	async getRefreshToken() {
     	 return storage.load({
@@ -68,6 +79,7 @@ class RedditClient{
 			var token = await this.getToken();
 		} catch (error) {
 			await this.refreshToken();
+			console.log('token refreshed');
 			return fetchHot(subreddit,after);
 		}
 		const response = await fetch(url,
@@ -130,7 +142,6 @@ class RedditClient{
         console.log('refreshing token...');
         const refresh_token = await this.getRefreshToken();
         console.log('refresh token: ') ;
-        console.log(refresh_token); 
 		const response = await fetch(
 			this.accessTokenUrl,
 			{
@@ -145,7 +156,6 @@ class RedditClient{
             console.log(refresh_token.refreshToken);
 			return;
 		} else {
-            console.log(responseJson);
 			this.storeToken(responseJson);
 		}
 	}
@@ -182,6 +192,24 @@ class RedditClient{
 		return responseJson;
 	}
 
+	async fetchMySubreddits() {
+		const token = await this.getToken();
+		const url = 'https://oauth.reddit.com/subreddits/mine/subscriber.json';
+		const response = await fetch(
+			url, 
+			{
+				method: 'GET',
+				headers: 
+				{
+					'Authorization': `Bearer  ${token.token.access_token}` ,
+					'Content-Type': 'application/json',
+				}
+			}
+		);
+		const responseJson = await response.json();
+		this.storeMySubreddits(responseJson);
+		return responseJson;
+	}
 }
 
 const Client = new RedditClient();

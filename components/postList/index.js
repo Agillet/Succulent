@@ -30,8 +30,8 @@ class PostList extends React.Component {
 		});
 	}
 	
-	componentDidMount = () => {
-		this.fetchData();
+	componentDidMount = async () => {
+		let data = await this.fetchData();
 	}
 	
 	fetchData = () => {
@@ -126,21 +126,21 @@ renderList = () => {
 	let listRef = '';  
 	return(
 		<View style = {style.screen} >
-		<FlatList
-		data = { this.state.posts }
-		renderItem = {({item}) => this.renderPost(item)}
-		keyExtractor = { (item, index) => index }
-		refreshing = { this.state.refreshing }
-		onRefresh = { this.handleRequest }
-		onEndReachedThreshold = { 0.5 }
-		onEndReached = { this.handleMore }
-		ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
-		stickyHeaderIndices={[0]} 
-		ref={(ref) => { this.listRef = ref; }}
-		/>
-		<Fab onPress = {() => this.listRef.getScrollResponder().scrollTo({y: 0, animated: true})}>
-		<Icon name="arrow-up" />
-		</Fab> 
+			<FlatList
+				data = { this.state.posts }
+				renderItem = {({item}) => this.renderPost(item)}
+				keyExtractor = { (item, index) => index }
+				refreshing = { this.state.refreshing }
+				onRefresh = { this.handleRequest }
+				onEndReachedThreshold = { 0.5 }
+				onEndReached = { this.handleMore }
+				ListHeaderComponent={ this.renderHeader(this.state.subreddit) }
+				stickyHeaderIndices={[0]} 
+				ref={(ref) => { this.listRef = ref; }}
+			/>
+			<Fab onPress = {() => this.listRef.getScrollResponder().scrollTo({y: 0, animated: true})}>
+				<Icon name="arrow-up" />
+			</Fab> 
 		</View>
 	);
 }
@@ -149,9 +149,8 @@ render() {
 	const { navigate } = this.props.navigation;
 	
 	return (
-		
 		<ListContainer>
-		{this.renderList()}
+			{this.renderList()}
 		</ListContainer>
 	);
 }

@@ -39,7 +39,7 @@ import {
 
     _renderRepliesSection = () => {
         if('children' in this.props.comment.data) {
-            console.log(this.props.comment.data); 
+            // console.log(this.props.comment.data); 
             return null;
         }
         let repliesSection = (
@@ -81,16 +81,13 @@ import {
         }
         return (
             <TouchableHighlight  onPress= {this._toggleReplies} >
-                <View style= { { marginLeft: 15} } >
                     <Markdown>{this.props.comment.data.body}</Markdown> 
-                </View>
             </TouchableHighlight>
         );
     }
 
     getMoreComments = () => {
         const data = this.props.comment.data;
-        console.log(this.state.children.join());
         const response = Client.fetchMoreComments(this.props.link, this.state.children.join())
         .then(response => console.log(response));
     }
